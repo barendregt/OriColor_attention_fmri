@@ -3,7 +3,7 @@ import sys
 sys.path.append( 'exp_tools' )
 
 from MapperSession import *
-from plot_mapper_staircase import *
+# from plot_staircases import *
 import appnope
 
 def main():
@@ -15,12 +15,13 @@ def main():
 		tracker_on = True
 	elif track_eyes == 'n':
 		tracker_on = False
+
 	appnope.nope()
 
 	ts = MapperSession( initials, run_nr, scanner, tracker_on )
 	ts.run()
 
-	plot_mapper_staircase(initials, run_nr)
-
+	# plot_staircases(initials, run_nr)
+	
 if __name__ == '__main__':
 	main()

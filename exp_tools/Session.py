@@ -44,7 +44,7 @@ class Session(object):
 		self.subject_initials = subject_initials
 		self.index_number = index_number
 		
-		self.setup_sound_system()
+		# self.setup_sound_system()
 		# pygame.mixer.init()
 		# os.chdir('sounds')
 		# self.sound_files = ['%d.wav' % i for i in range(3)] # subprocess.Popen('ls *.*', shell=True, stdout=subprocess.PIPE).communicate()[0].split('\n')[0:-1]
@@ -53,18 +53,12 @@ class Session(object):
 		
 		self.clock = core.Clock()
 		
-		self.outputDict = {'parameterArray': [], 'eventArray' : []}
+		self.outputDict = {'parameterArray': [], 'eventArray' : [], 'trialResponses' : []}
 		self.events = []
 		self.stopped = False
 	
-	def setup_sound_system(self):
-		"""initialize pyaudio backend, and create dictionary of sounds."""
-		self.pyaudio = pyaudio.PyAudio()
-		self.sound_files = subprocess.Popen('ls ' + os.path.join(os.environ['EXPERIMENT_HOME'], 'sounds', '*.wav'), shell=True, stdout=subprocess.PIPE).communicate()[0].split('\n')[0:-1]
-		self.sounds = {}
-		for sf in self.sound_files:
-			self.read_sound_file(file_name = sf)
-		# print self.sounds
+	def setup_sounds(self):
+		pass
 
 	def read_sound_file(self, file_name, sound_name = None):
 		"""Read sound file from file_name, and append to self.sounds with name as key"""
@@ -93,7 +87,7 @@ class Session(object):
 		"""
 
 		# the actual screen-getting
-		self.display = libscreen.Display(disptype='psychopy', dispsize=size, fgc=(255,0,0), bgc=list((255*bgl for bgl in background_color)), screennr=screen_nr,mousevisible=False)
+		self.display = libscreen.Display(disptype='psychopy', full_screen = False, dispsize=size, fgc=(255,0,0), bgc=list((255*bgl for bgl in background_color)), screennr=screen_nr,mousevisible=False)
 		# self.pygaze_scr = libscreen.Screen(disptype='psychopy')
 
 		# print dir(self.display)
@@ -113,10 +107,28 @@ class Session(object):
 		self.physical_screen_size = physical_screen_size
 		self.physical_screen_distance = physical_screen_distance
 		self.screen_height_degrees = 2.0 * 180.0/pi * atan((physical_screen_size[1]/2.0)/physical_screen_distance)
-		self.pixels_per_degree = (size[1]) / self.screen_height_degrees
+		self.screen_width_degrees = 2.0 * 180.0/pi * atan((physical_screen_size[0]/2.0)/physical_screen_distance)
+		self.pixels_per_degree = (size[0]) / self.screen_width_degrees
 		self.centimeters_per_degree = physical_screen_size[1] / self.screen_height_degrees
 		self.pixels_per_centimeter = self.pixels_per_degree / self.centimeters_per_degree
 		# print 'screen: ' + str(self.screen_height_degrees) + ' degrees tall and pixels per degree: ' + str(self.pixels_per_degree)
+		
+		# supplanting the color+texture+mask shader
+		import psychopy._shadersPyglet as shaders
+
+		colorToBlackFragmentShader = '''
+		   uniform sampler2D texture, mask;
+		   void main() {
+			   vec4 textureFrag = texture2D(texture,gl_TexCoord[0].st);
+			   vec4 maskFrag = texture2D(mask,gl_TexCoord[1].st);
+			   gl_FragColor.a = gl_Color.a*maskFrag.a*textureFrag.a;
+			   gl_FragColor.rgb = gl_Color.rgb * ((textureFrag.rgb +1.0)/2.0);
+		   }
+		   '''
+		if self.screen.winType=='pyglet' and self.screen._haveShaders:
+		   self.screen._progSignedTexMask = shaders.compileProgram(shaders.vertSimple,
+		colorToBlackFragmentShader)
+		#end 
 		
 		# self.screen.mousevis = False
 		self.screen.flip()
@@ -129,7 +141,8 @@ class Session(object):
 		if not os.path.isdir(data_directory):
 			os.mkdir(data_directory)
 			
-		self.output_file = os.path.join(data_directory, self.subject_initials + '_' + str(self.index_number) + '_' + opfn )
+		#self.output_file = os.path.join(data_directory, self.subject_initials + '_' + str(self.index_number) + '_' + opfn )
+		self.output_file = os.path.join(data_directory, self.subject_initials + '_' + str(self.index_number))# + '_' + opfn )
 	
 	def open_input_file(self):
 		"""
@@ -159,50 +172,50 @@ class Session(object):
 		"""close screen and save data"""
 		pygame.mixer.quit()
 		self.screen.close()
-		parsopf = open(self.output_file + '_outputDict.pickle', 'a')
+		parsopf = open(self.output_file + '_outputDict.pickle', 'ab')
 		pickle.dump(self.outputDict,parsopf)
 		parsopf.close()
 	
-	def play_sound(self, sound_index = '0'):
-		"""docstring for play_sound"""
-		if type(sound_index) == int:
-			sound_index = str(sound_index)
-		# assuming 44100 Hz, mono channel np.int16 format for the sounds
-		stream_data = self.sounds[sound_index]
+	# def play_sound(self, sound_index = '0'):
+	# 	"""docstring for play_sound"""
+	# 	if type(sound_index) == int:
+	# 		sound_index = str(sound_index)
+	# 	# assuming 44100 Hz, mono channel np.int16 format for the sounds
+	# 	stream_data = self.sounds[sound_index]
 		
-		self.frame_counter = 0
-		def callback(in_data, frame_count, time_info, status):
- 			data = stream_data[self.frame_counter:self.frame_counter+frame_count]
- 			self.frame_counter += frame_count
- 			return (data, pyaudio.paContinue)
+	# 	self.frame_counter = 0
+	# 	def callback(in_data, frame_count, time_info, status):
+ # 			data = stream_data[self.frame_counter:self.frame_counter+frame_count]
+ # 			self.frame_counter += frame_count
+ # 			return (data, pyaudio.paContinue)
 
-		# open stream using callback (3)
-		stream = self.pyaudio.open(format=pyaudio.paInt16,
-						channels=1,
-						rate=44100,
-						output=True,
-						stream_callback=callback)
+	# 	# open stream using callback (3)
+	# 	stream = self.pyaudio.open(format=pyaudio.paInt16,
+	# 					channels=1,
+	# 					rate=44100,
+	# 					output=True,
+	# 					stream_callback=callback)
 
-		stream.start_stream()
-		# stream.write(stream_data)
+	# 	stream.start_stream()
+	# 	# stream.write(stream_data)
 
-	def play_np_sound(self, sound_array):
-		# assuming 44100 Hz, mono channel np.int16 format for the sounds
+	# def play_np_sound(self, sound_array):
+	# 	# assuming 44100 Hz, mono channel np.int16 format for the sounds
 		
-		self.frame_counter = 0
-		def callback(in_data, frame_count, time_info, status):
- 			data = sound_array[self.frame_counter:self.frame_counter+frame_count]
- 			self.frame_counter += frame_count
- 			return (data, pyaudio.paContinue)
+	# 	self.frame_counter = 0
+	# 	def callback(in_data, frame_count, time_info, status):
+ # 			data = sound_array[self.frame_counter:self.frame_counter+frame_count]
+ # 			self.frame_counter += frame_count
+ # 			return (data, pyaudio.paContinue)
 
-		# open stream using callback (3)
-		stream = self.pyaudio.open(format=pyaudio.paInt16,
-						channels=1,
-						rate=44100,
-						output=True,
-						stream_callback=callback)
+	# 	# open stream using callback (3)
+	# 	stream = self.pyaudio.open(format=pyaudio.paInt16,
+	# 					channels=1,
+	# 					rate=44100,
+	# 					output=True,
+	# 					stream_callback=callback)
 
-		stream.start_stream()
+	# 	stream.start_stream()
 	
 
 class EyelinkSession(Session):
@@ -426,11 +439,11 @@ class EyelinkSession(Session):
 			self.tracker.close()
 		super(EyelinkSession, self).close()
 	
-	def play_sound(self, sound_index = '1'):
-		"""docstring for play_sound"""
-		super(EyelinkSession, self).play_sound(sound_index = sound_index)
-		if self.tracker != None:
-			self.tracker.log('sound ' + str(sound_index) + ' at ' + str(core.getTime()) )
+	# def play_sound(self, sound_index = '1'):
+	# 	"""docstring for play_sound"""
+	# 	super(EyelinkSession, self).play_sound(sound_index = sound_index)
+	# 	if self.tracker != None:
+	# 		self.tracker.log('sound ' + str(sound_index) + ' at ' + str(core.getTime()) )
 
 
 class StarStimSession(EyelinkSession):

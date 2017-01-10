@@ -41,6 +41,7 @@ class Trial(object):
 		
 		self.events = []
 		self.phase = 0
+		self.response = -1
 		self.phase_times = np.cumsum(np.array(self.phase_durations))
 		self.stopped = False
 	
@@ -60,12 +61,13 @@ class Trial(object):
 		self.stopped = True
 		if self.tracker:
 			# pipe parameters to the eyelink data file in a for loop so as to limit the risk of flooding the buffer
-			for k in self.parameters.keys():
-				self.tracker.log('trial ' + str(self.ID) + ' parameter\t' + k + ' : ' + str(self.parameters[k]) )
-				time_module.sleep(0.0005)
+			for k in self.parameterDict:
+				self.tracker.log('trial ' + str(self.ID) + ' parameter\t' + k + ' : ' + str(self.parameterDict[k]) )
+				time_module.sleep(0.00005)
 			self.tracker.log('trial ' + str(self.ID) + ' stopped at ' + str(self.stop_time) )
 		self.session.outputDict['eventArray'].append(self.events)
-		self.session.outputDict['parameterArray'].append(self.parameters)
+		self.session.outputDict['parameterArray'].append(self.parameterDict)
+		#self.session.outputDict['trialResponses'].append(self.response)
 		
 	def key_event(self, event):
 		if self.tracker:
@@ -88,9 +90,15 @@ class Trial(object):
 		"""go one phase forward"""
 		self.phase += 1
 		phase_time = str(self.session.clock.getTime())
-		self.events.append('trial ' + str(self.ID) + ' phase ' + str(self.phase) + ' started at ' + phase_time)
+
+		if self.phase == 7:
+			self.response_time_start = self.session.clock.getTime()
+		
+		if (self.phase==0) or (self.phase==7):
+			self.events.append('trial ' + str(self.ID) + ' phase ' + str(self.phase) + ' started at ' + phase_time)
+
 		if self.tracker:
 			self.tracker.log('trial ' + str(self.ID) + ' phase ' + str(self.phase) + ' started at ' + phase_time )
-			time_module.sleep(0.0005)
+			# time_module.sleep(0.0005)
 		
 		
