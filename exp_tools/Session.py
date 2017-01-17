@@ -114,7 +114,7 @@ class Session(object):
 		# print 'screen: ' + str(self.screen_height_degrees) + ' degrees tall and pixels per degree: ' + str(self.pixels_per_degree)
 		
 		# supplanting the color+texture+mask shader
-		import psychopy._shadersPyglet as shaders
+		import psychopy.visual.shaders as shaders
 
 		colorToBlackFragmentShader = '''
 		   uniform sampler2D texture, mask;

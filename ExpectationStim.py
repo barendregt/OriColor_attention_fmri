@@ -27,7 +27,7 @@ class ExpectationStim(object):
 
 		self.setup_cue() 
 
-		self.pyaudio = pyaudio.PyAudio()
+		# self.pyaudio = pyaudio.PyAudio()
 
 		self.timer = core.Clock()
 
@@ -38,18 +38,18 @@ class ExpectationStim(object):
 
 	def make_stimulus(self):
 
-		self.stimulus = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings[0], units = 'pix',  size = (self.size_pix, self.size_pix), pos = (self.trial_settings[-2], self.trial_settings[-1]), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings[1], self.trial_settings[2], self.trial_settings[3]]))
+		self.stimulus = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings['base_ori'], units = 'pix',  size = (self.size_pix, self.size_pix), pos = (self.trial_settings['trial_position_x']*self.session.pixels_per_degree, self.trial_settings['trial_position_y']*self.session.pixels_per_degree), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b']]))
 		#self.stimulus2 = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings[0] + self.trial.trial_ori_value,  size = (self.size_pix, self.size_pix), pos = (self.trial_settings[-2], self.trial_settings[-1]), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings[1], self.trial_settings[2] + self.trial.trial_color_value, self.trial_settings[3]]))
 		
 	def update_stimulus(self):
 		#pass	
-		self.stimulus.ori = self.trial_settings[0] + self.trial.trial_ori_value
+		self.stimulus.ori = self.trial_settings['base_ori'] + self.trial.trial_ori_value
 		if self.trial.col_trial_direction > 0:
 			#print [self.trial_settings[1], self.trial_settings[2], self.trial_settings[3] - abs(self.trial.trial_color_value)
 					
-			self.stimulus.color = ct.lab2psycho([self.trial_settings[1], self.trial_settings[2], self.trial_settings[3] - abs(self.trial.trial_color_value)])
+			self.stimulus.color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b'] - abs(self.trial.trial_color_value)])
 		else:
-			self.stimulus.color = ct.lab2psycho([self.trial_settings[1], self.trial_settings[2] - self.trial.trial_color_value, self.trial_settings[3]])
+			self.stimulus.color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'] - self.trial.trial_color_value, self.trial_settings['base_color_b']])
 
 	def play_warning_sound(self):
 		
@@ -76,24 +76,31 @@ class ExpectationStim(object):
 
 	def setup_cue(self):
 
-		if self.trial_settings[-5] == 0:
-			self.cue_sound = 'red45'
-		elif self.trial_settings[-5] == 1:
-			self.cue_sound = 'red135'
-		elif self.trial_settings[-5] == 2:
-			self.cue_sound = 'green45'
-		elif self.trial_settings[-5] == 3:
-			self.cue_sound = 'green135'
+		# if self.trial_settings['cue_stimulus'] == 0:
+		# 	self.cue_sound = 'red45'
+		# elif self.trial_settings[-5] == 1:
+		# 	self.cue_sound = 'red135'
+		# elif self.trial_settings[-5] == 2:
+		# 	self.cue_sound = 'green45'
+		# elif self.trial_settings[-5] == 3:
+		# 	self.cue_sound = 'green135'
 
-		if self.trial_settings[-4] == 1:
+		# self.cue_sound = self.trial_settings['cue_stimulus_label']
+
+		if self.trial_settings['task'] == 1:
 			taskMessage = 'K'
 		else:
 			taskMessage = 'O'
-	 	self.taskstim = visual.TextStim(self.screen, text = taskMessage, color = 'black', bold = True, pos = (0.0,0.0), height = 0.4 * self.session.pixels_per_degree)			
+
+	 	self.task_stim = visual.TextStim(self.screen, text = taskMessage, color = 'black', bold = True, pos = (0.0,0.0), height = 0.4 * self.session.pixels_per_degree)			
+		self.response_stim = visual.TextStim(self.screen, text = '?', color = 'black', bold = True, pos = (0.0,0.0), height = 0.4 * self.session.pixels_per_degree)				 	
+
+		self.pointer = visual.Line(self.screen, start = (np.sign(self.trial_settings['trial_position_x']) * 0.25 * self.session.pixels_per_degree, np.sign(self.trial_settings['trial_position_y']) * 0.25 * self.session.pixels_per_degree), end = (self.session.pixels_per_degree*self.trial_settings['trial_position_x']/3.0, self.session.pixels_per_degree*self.trial_settings['trial_position_y']/3.0))
 
 	def play_cue_sound(self):
 		
-		# assuming 44100 Hz, mono channel np.int16 format for the sounds
+		# assuming 44100 Hz, mono channel np.int16 format for the sound
+
 
 		stream_data = self.session.sounds[self.cue_sound]
 		
@@ -119,21 +126,23 @@ class ExpectationStim(object):
 	def draw(self, phase = 0):
 		self.phase = phase		
 		
-		if (self.phase >= 2) and (self.phase < 4):
-			self.taskstim.draw()
+		if (self.phase >= 1) and (self.phase < 3):
+			self.task_stim.draw()
+			self.pointer.draw()
 
-		if self.phase == 4:
+		if self.phase == 3:
 			self.stimulus.draw()
 			# if self.printcolor:
 				# print self.stimulus.color
 				# self.printcolor = False
 
-		if self.phase == 6:
+		if self.phase == 5:
 			self.stimulus.draw()
 			# if self.printcolor:
 				# print self.stimulus.color
 				# self.printcolor = False
-
+		if self.phase >= 6:
+			self.response_stim.draw()
 		# log_msg = 'stimulus draw for phase %f, at %f'%(phase, self.session.clock.getTime())
 		# self.trial.events.append( log_msg )
 		# if self.session.tracker:

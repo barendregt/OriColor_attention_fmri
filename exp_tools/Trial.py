@@ -91,10 +91,10 @@ class Trial(object):
 		self.phase += 1
 		phase_time = str(self.session.clock.getTime())
 
-		if self.phase == 7:
+		if self.phase == 6:
 			self.response_time_start = self.session.clock.getTime()
 		
-		if (self.phase==0) or (self.phase==7):
+		if (self.phase==0) or (self.phase==6):
 			self.events.append('trial ' + str(self.ID) + ' phase ' + str(self.phase) + ' started at ' + phase_time)
 
 		if self.tracker:
