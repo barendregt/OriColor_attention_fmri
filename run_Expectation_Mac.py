@@ -8,7 +8,7 @@ sys.path.append( 'exp_tools' )
 from ExpectationSession import *
 
 # useTracker = True
-
+sid = 'tt'
 inScanner =0 
 useTracker =0
 expTask = 1
