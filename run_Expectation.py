@@ -13,13 +13,14 @@ def run_first_phase(root,e,inScanner=False,useTracker=False,expTask=1):
 	#print("First Name: %s\nLast Name: %s" % (e1.get(), e2.get()))
 
    sid = e['SubjectID'].get().strip()
+   run = e['Run nr'].get()
 
    print (sid, inScanner.get(),useTracker.get(),expTask.get())
 
    if (not sid) or (sid == ""):
       Label(root, text = 'Please enter a subject ID!').pack()
    else:
-      ts = ExpectationSession( sid, 0, inScanner.get(), useTracker.get(), expTask.get() )
+      ts = ExpectationSession( sid, run, inScanner.get(), useTracker.get(), expTask.get() )
       root.quit()
       ts.run()		
 	
