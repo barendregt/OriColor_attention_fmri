@@ -128,7 +128,7 @@ class ExpectationStim(object):
 		
 		if (self.phase >= 1) and (self.phase < 3):
 			self.task_stim.draw()
-			self.pointer.draw()
+			# self.pointer.draw()
 
 		if self.phase == 3:
 			self.stimulus.draw()
