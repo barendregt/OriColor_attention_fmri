@@ -29,7 +29,7 @@ from scipy.io import wavfile
 
 import pyaudio, wave
 
-from pylink import *
+# from pylink import *
 
 import pygaze
 from pygaze import libscreen 
@@ -238,7 +238,7 @@ class EyelinkSession(Session):
 			# create actual tracker
 			try:
 				# self.tracker = EyeLink()
-				# shell()
+				shell()
 				self.tracker = eyetracker.EyeTracker(self.display, trackertype='eyelink', resolution=self.display.dispsize, data_file=self.eyelink_temp_file, bgc=self.display.bgc)
 				self.tracker_on = True
 			except:

@@ -35,7 +35,7 @@ class ExpectationSession(EyelinkSession):
 		self.response_buttons = response_buttons
 
 		self.scanner = scanner
-		self.setup_sounds()
+		# self.setup_sounds()
 
 		self.task = task
 
@@ -66,7 +66,12 @@ class ExpectationSession(EyelinkSession):
 		# 	self.staircases = pfile.read().split(";")
 		# 	pfile.close()
 
-		self.prepare_staircases()
+		if os.path.isfile(os.path.join('data', self.subject_initials + '_staircase.pickle')):
+			f = open(os.path.join('data', self.subject_initials + '_staircase.pickle'),'rb')
+			self.staircases = cPickle.load(f)
+		else:
+			self.prepare_staircases()
+		
 		self.prepare_trials()
 		
 
@@ -134,6 +139,10 @@ class ExpectationSession(EyelinkSession):
 
 		nTrialsPerStim = self.standard_parameters['ntrials_per_stim']
 
+		xy_positions = self.standard_parameters['stimulus_positions'] * nTrialsPerStim * 4
+
+		xy_ii = 0
+
 		for ttype in range(len(trial_types)):
 			# for stype in range(len(stim_types)):
 
@@ -146,19 +155,21 @@ class ExpectationSession(EyelinkSession):
 											'trial_stimulus_label': stim_labels[ttype],
 											'trial_stimulus': ttype,
 											'task': self.task,
-											'trial_position_x': 0.0,
-											'trial_position_y': 0.0																											 																												 
+											'trial_position_x': xy_positions[xy_ii][0],
+											'trial_position_y': xy_positions[xy_ii][1]																											 																												 
 											}
 
 					self.trials.append(this_trial_parameters)
 
+					xy_ii += 1
+
 		shuffle(self.trials)
 
-		xy_positions = self.standard_parameters['stimulus_positions'] * nTrialsPerStim * 4
+		
 
-		for tii in range(len(self.trials)):
-			self.trials[tii]['trial_position_x'] = xy_positions[tii][0]
-			self.trials[tii]['trial_position_y'] = xy_positions[tii][1]
+		# for tii in range(len(self.trials)):
+		# 	self.trials[tii]['trial_position_x'] = xy_positions[tii][0]
+		# 	self.trials[tii]['trial_position_y'] = xy_positions[tii][1]
 
 
 	def prepare_staircases(self):
@@ -171,7 +182,7 @@ class ExpectationSession(EyelinkSession):
 
 			self.staircases[stimt] = StairHandler(self.standard_parameters['quest_initial_stim_values'][stimt], 
 												  stepSizes=self.standard_parameters['quest_stepsize'][stimt], 
-												  # nTrials = 500,
+												  nTrials = 500,
 												  nUp=1, nDown=3, 
 												  # method='2AFC', 
 												  stepType='db', 
@@ -196,12 +207,12 @@ class ExpectationSession(EyelinkSession):
 		
 	def close(self):
 		
-		this_instruction_string = 'Exporting data, please wait'# self.parameters['task_instruction']
-		self.instruction = visual.TextStim(self.screen, text = this_instruction_string, pos = (0, -100.0), italic = True, height = 30, alignHoriz = 'center')
-		self.instruction.setSize((1200,50))
-		self.instruction.draw()
+		# this_instruction_string = 'Exporting data, please wait'# self.parameters['task_instruction']
+		# self.instruction = visual.TextStim(self.screen, text = this_instruction_string, pos = (0, -100.0), italic = True, height = 30, alignHoriz = 'center')
+		# self.instruction.setSize((1200,50))
+		# self.instruction.draw()
 
-		self.screen.flip()		
+		# self.screen.flip()		tttttttttttt
 		
 		#self.outputDict['trials'] = self.trial_array
 
@@ -242,21 +253,38 @@ class ExpectationSession(EyelinkSession):
 		self.fixation_rim.draw()
 		self.fixation.draw()
 
-		this_instruction_string = 'Press spacebar to start'# self.parameters['task_instruction']
+		this_instruction_string = 'Waiting for scanner to start'# self.parameters['task_instruction']
 		self.instruction = visual.TextStim(self.screen, text = this_instruction_string, pos = (0, -100.0), italic = True, height = 30, alignHoriz = 'center')
 		self.instruction.setSize((1200,50))
 		self.instruction.draw()
 
 		self.screen.flip()
 
-		event.waitKeys(keyList = ['space'])
+		print 'Waiting for scanner to start...'
+
+		if self.scanner==1:
+			event.waitKeys(keyList = ['t'])
+
+			self.fixation_outer_rim.draw()
+			self.fixation_rim.draw()
+			self.fixation.draw()
+
+			self.screen.flip()
+
+			time.sleep(15)
+		else:
+			event.waitKeys(keyList = ['space'])		
+
 
 		event.clearEvents()
 
-		if self.trialID >= 0:
-			rStart = self.trialID
-		else:
-			rStart = 0
+
+
+
+		# if self.trialID >= 0:
+		# 	rStart = self.trialID
+		# else:
+		rStart = 0
 
 		for self.trialID in range(rStart, len(self.trials)):
 			# prepare the parameters of the following trial based on the shuffled trial array
@@ -280,6 +308,16 @@ class ExpectationSession(EyelinkSession):
 			if self.stopped == True:
 				break
 			
+
+		self.fixation_outer_rim.draw()
+		self.fixation_rim.draw()
+		self.fixation.draw()
+
+		self.screen.flip()
+
+		if (self.scanner==1) and (not self.stopped):
+			time.sleep(15)
+				
 		self.close()
 	
 

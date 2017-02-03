@@ -205,7 +205,7 @@ class ExpectationTrial(Trial):
 								if self.session.tracker:
 									self.session.tracker.log( log_msg )	
 						
-						self.phase_forward()
+						#self.phase_forward()
 						
 
 				#event_msg = 'trial ' + str(self.ID) + ' key: ' + str(ev) + ' at time: ' + str(self.session.clock.getTime())

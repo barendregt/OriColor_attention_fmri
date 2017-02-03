@@ -47,8 +47,8 @@ standard_parameters = {
 	'timing_responseDuration' : 1.5,#2.75, # time to respond	
 	'timing_ITI_duration':  (0.5, 1.5),		# in sec
 
-	'response_buttons_orientation': ['j','l'],
-	'response_buttons_color': ['s','f'],
+	'response_buttons_orientation': ['b','y'],
+	'response_buttons_color': ['w','e'],
 
 }
 
@@ -65,14 +65,14 @@ standard_parameters = {
 # }
 
 response_buttons = {
-	's' : -1, # more yellow's'
-	'f' : 1, # more blue'f'
-	'j' : -1, # CCW  more vertical'j'
-	'l' : 1 # CW    more horizontal 'l'
+	'w' : -1, # more yellow's'
+	'e' : 1, # more blue'f'
+	'b' : -1, # CCW  more vertical'j'
+	'y' : 1 # CW    more horizontal 'l'
 }
 
 screen_num = 1
-screen_res = (3840,2160)#(1920,1080)#(1024,768)#(1280,1024)#(1680,1050)#(3840,2160)#(1920,1080)(2560,1440)#(
-screen_dist = 60.0 # 159.0
+screen_res = (1920,1080)#(1024,768)#(1280,1024)#(1680,1050)#(3840,2160)#(1920,1080)(2560,1440)#(
+screen_dist = 225#60.0 # 159.0
 screen_size = (70,40)#(48, 38) # (70, 40)
 background_color = (0.0, 0.0, 0.0)
