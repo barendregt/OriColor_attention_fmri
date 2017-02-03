@@ -37,9 +37,12 @@ class OneUpOneDownStaircase(object):
 		self.nr_trials = 0
 		self.present_nr_reversals = 0
 	
-	def test_value(self):
-		return self.test_value
+	# def test_value(self):
+	# 	return self.test_value
 	
+	def get_intensity(self):
+		return self.test_value
+
 	def answer( self, correct ):
 		continue_after_this_trial = True
 		self.nr_trials = self.nr_trials + 1

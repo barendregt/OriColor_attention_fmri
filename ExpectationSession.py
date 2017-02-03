@@ -1,6 +1,6 @@
 from __future__ import division
 from psychopy import visual, core, misc, event
-from psychopy.data import StairHandler
+# from psychopy.data import StairHandler
 import numpy as np
 from IPython import embed as dbstop
 from math import *
@@ -12,17 +12,18 @@ from pygame.locals import *
 sys.path.append( 'exp_tools' )
 
 
-import Quest
+# import Quest
 from Session import *
 from ExpectationTrial import *
 from standard_parameters import *
 
+from Staircase import ThreeUpOneDownStaircase
 
 class ExpectationSession(EyelinkSession):
 	def __init__(self, subject_initials, index_number,scanner, tracker_on, task):
 		super(ExpectationSession, self).__init__( subject_initials, index_number)
 
-		self.create_screen( size = screen_res, full_screen = 1, physical_screen_distance = screen_dist, background_color = background_color, physical_screen_size = screen_size, screen_nr = screen_num )
+		self.create_screen( size = screen_res, full_screen = screen_full, physical_screen_distance = screen_dist, background_color = background_color, physical_screen_size = screen_size, screen_nr = screen_num )
 
 		self.create_output_file_name()
 		if tracker_on:
@@ -180,15 +181,19 @@ class ExpectationSession(EyelinkSession):
 
 		for stimt in range(0,len(self.standard_parameters['quest_initial_stim_values'])):
 
-			self.staircases[stimt] = StairHandler(self.standard_parameters['quest_initial_stim_values'][stimt], 
-												  stepSizes=self.standard_parameters['quest_stepsize'][stimt], 
-												  nTrials = 500,
-												  nUp=1, nDown=3, 
-												  # method='2AFC', 
-												  stepType='db', 
-												  minVal=0.0,
-												  maxVal=75)
+			# self.staircases[stimt] = StairHandler(self.standard_parameters['quest_initial_stim_values'][stimt], 
+			# 									  stepSizes=self.standard_parameters['quest_stepsize'][stimt], 
+			# 									  nTrials = 500,
+			# 									  nUp=1, nDown=3, 
+			# 									  # method='2AFC', 
+			# 									  stepType='db', 
+			# 									  minVal=0.0,
+			# 									  maxVal=75)
 
+
+			self.staircases[stimt] = ThreeUpOneDownStaircase(initial_value = self.standard_parameters['quest_initial_stim_values'][stimt], 
+												  			 initial_stepsize=self.standard_parameters['quest_stepsize'][stimt][0],
+															 max_nr_trials = 500)
 
 	def partial_store(self, tid):
 		data = pd.concat(self.pdOutput)	
@@ -225,7 +230,7 @@ class ExpectationSession(EyelinkSession):
 		cPickle.dump(self.staircases,parsopf)
 
 		f = open(os.path.join('data', self.subject_initials + '_staircase.txt'), 'w')
-		f.write(";".join([str(self.staircases[s].next()) for s in range(len(self.staircases))]))			
+		f.write(";".join([str(self.staircases[s].get_intensity()) for s in range(len(self.staircases))]))			
 		f.close()
 
 #		

@@ -35,16 +35,19 @@ class ExpectationTrial(Trial):
 		self.col_trial_direction = 2*round(np.random.rand())-1#np.random.choice([-1,1])	
 		if self.parameters['base_color_a'] > 0:
 			self.staircase_col_index = self.session.standard_parameters['quest_r_index']
-			newSample = self.session.staircases[self.staircase_col_index].next()
+			#newSample = self.session.staircases[self.staircase_col_index].next()
+			newSample = self.session.staircases[self.staircase_col_index].get_intensity()
 		else:
 			self.staircase_col_index = self.session.standard_parameters['quest_g_index']
-			newSample = -1*self.session.staircases[self.staircase_col_index].next()
+			#newSample = -1*self.session.staircases[self.staircase_col_index].next()
+			newSample = -1*self.session.staircases[self.staircase_col_index].get_intensity()
 			
 		self.trial_color_value = newSample
 
 		# if self.parameters['base_ori'] == 45:
 		self.staircase_ori_index = self.session.standard_parameters['quest_o_index']
-		newSample = self.session.staircases[self.staircase_ori_index].next()
+		#newSample = self.session.staircases[self.staircase_ori_index].next()
+		newSample = self.session.staircases[self.staircase_ori_index].get_intensity()
 		# else:
 		# 	self.staircase_ori_index = self.session.standard_parameters['quest_o_index']
 		# 	newSample = -1*self.session.staircases[self.staircase_ori_index].next()
@@ -173,11 +176,12 @@ class ExpectationTrial(Trial):
 							self.parameterDict.update({'correct_answer': response, 'response': self.session.response_buttons[ev], 'button': ev, 'trial_direction': self.col_trial_direction, 'reaction_time': self.session.clock.getTime() - self.response_time_start})							
 							
 							if (ev in self.session.standard_parameters['response_buttons_color']): # Only update staircase during first run
-								self.session.staircases[self.staircase_col_index].addResponse(response)
+								#self.session.staircases[self.staircase_col_index].addResponse(response)
+								self.session.staircases[self.staircase_col_index].answer(response)
 
 								# shell()
 
-								log_msg = 'staircase %s updated from %f to %f after response %s at %f'%( self.staircase_col_index, abs(self.trial_color_value), self.session.staircases[self.staircase_col_index]._nextIntensity,str(response), self.session.clock.getTime() )
+								log_msg = 'staircase %s updated from %f to %f after response %s at %f'%( self.staircase_col_index, abs(self.trial_color_value), self.session.staircases[self.staircase_col_index].get_intensity(),str(response), self.session.clock.getTime() )
 
 								self.events.append( log_msg )
 								print log_msg
@@ -194,11 +198,12 @@ class ExpectationTrial(Trial):
 							
 							if ev in self.session.standard_parameters['response_buttons_orientation']:	# Only update staircase during first run
 								# self.session.staircases[self.staircase_ori_index].update(abs(self.trial_ori_value), response)
-								self.session.staircases[self.staircase_ori_index].addResponse(response)
+								#self.session.staircases[self.staircase_ori_index].addResponse(response)
+								self.session.staircases[self.staircase_ori_index].answer(response)
 
 								# shell()
 
-								log_msg = 'staircase %s updated from %f to %f after response %s at %f'%( self.staircase_ori_index, abs(self.trial_ori_value), self.session.staircases[self.staircase_ori_index]._nextIntensity,str(response), self.session.clock.getTime() )
+								log_msg = 'staircase %s updated from %f to %f after response %s at %f'%( self.staircase_ori_index, abs(self.trial_ori_value), self.session.staircases[self.staircase_ori_index].get_intensity(),str(response), self.session.clock.getTime() )
 
 								self.events.append( log_msg )
 								print log_msg
