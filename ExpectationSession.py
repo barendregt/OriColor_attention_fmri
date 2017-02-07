@@ -143,6 +143,8 @@ class ExpectationSession(EyelinkSession):
 		xy_positions = self.standard_parameters['stimulus_positions'] * nTrialsPerStim * 4
 
 		xy_ii = 0
+		
+		task_ii = 0
 
 		for ttype in range(len(trial_types)):
 			# for stype in range(len(stim_types)):
@@ -155,7 +157,7 @@ class ExpectationSession(EyelinkSession):
 											'base_color_b': trial_types[ttype][3],
 											'trial_stimulus_label': stim_labels[ttype],
 											'trial_stimulus': ttype,
-											'task': self.task,
+											'task': self.task[task_ii],
 											'trial_position_x': xy_positions[xy_ii][0],
 											'trial_position_y': xy_positions[xy_ii][1]																											 																												 
 											}
@@ -164,8 +166,18 @@ class ExpectationSession(EyelinkSession):
 
 					xy_ii += 1
 
+					if len(self.task)>1:
+						task_ii = 1-task_ii
+
+
 		shuffle(self.trials)
 
+		for ii,t in enumerate(self.trials):
+			if ii > 0:
+				while (self.trials[ii]['trial_position_x'] == self.trials[ii-1]['trial_position_x']) and (self.trials[ii]['trial_position_y'] == self.trials[ii-1]['trial_position_y']):
+
+				      self.trials[ii]['trial_position_x'] = self.standard_parameters['stimulus_positions'][np.random.randint(low=0,high=4)][0]
+				      self.trials[ii]['trial_position_y'] = self.standard_parameters['stimulus_positions'][np.random.randint(low=0,high=4)][1]
 		
 
 		# for tii in range(len(self.trials)):

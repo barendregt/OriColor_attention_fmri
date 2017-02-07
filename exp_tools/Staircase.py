@@ -25,16 +25,17 @@ class OneUpOneDownStaircase(object):
 		self.initial_value = initial_value
 		self.initial_stepsize = initial_stepsize
 		self.nr_reversals = nr_reversals
-		self.increment_value = increment_value
+		self.increment_value = initial_stepsize#increment_value
 		self.stepsize_multiplication_on_reversal = stepsize_multiplication_on_reversal
 		self.max_nr_trials = max_nr_trials
 		
 		self.test_value = self.initial_value
-		self.present_increment_value = increment_value
+		self.present_increment_value = initial_stepsize#increment_value
 		
 		# set up filler variables
 		self.past_answers = []
 		self.nr_trials = 0
+		self.nr_correct = 0
 		self.present_nr_reversals = 0
 	
 	# def test_value(self):
@@ -76,11 +77,13 @@ class TwoUpOneDownStaircase(OneUpOneDownStaircase):
 		continue_after_this_trial = True
 		self.nr_trials = self.nr_trials + 1
 		self.past_answers.append(correct)
+
+		if correct:
 		
-		nr_corrects_in_last_2_trials = np.array(self.past_answers, dtype = float)[-2:].sum()
+			nr_corrects_in_last_2_trials = np.array(self.past_answers, dtype = float)[-2:].sum()
 		
-		if nr_corrects_in_last_2_trials == 2:	# this subject is too good for this stimulus value
-			self.test_value = self.test_value - self.present_increment_value
+			if nr_corrects_in_last_2_trials == 2:	# this subject is too good for this stimulus value
+				self.test_value = self.test_value - self.present_increment_value
 		else:
 			self.test_value = self.test_value + self.present_increment_value
 		
@@ -104,12 +107,18 @@ class ThreeUpOneDownStaircase(TwoUpOneDownStaircase):
 		self.nr_trials = self.nr_trials + 1
 		self.past_answers.append(correct)
 		
-		nr_corrects_in_last_3_trials = np.array(self.past_answers, dtype = float)[-3:].sum()
-		
-		if nr_corrects_in_last_3_trials == 3:	# this subject is too good for this stimulus value
-			self.test_value = self.test_value - self.present_increment_value
+		if correct:
+
+			#nr_corrects_in_last_3_trials = np.array(self.past_answers, dtype = float)[-3:].sum()
+			self.nr_correct += 1
+
+			if self.nr_correct == 3:	# this subject is too good for this stimulus value
+				self.test_value = self.test_value - self.present_increment_value
+				self.nr_correct = 0
+
 		else:
 			self.test_value = self.test_value + self.present_increment_value
+			self.nr_correct = 0
 		
 		if self.nr_trials > 1:
 			if self.past_answers[-1] != self.past_answers[-2]:	# we have a reversal here

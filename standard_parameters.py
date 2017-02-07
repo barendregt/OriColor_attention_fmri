@@ -48,7 +48,7 @@ standard_parameters = {
 	'timing_ITI_duration':  (0.5, 1.5),		# in sec
 
 	'response_buttons_orientation': ['b','y'],
-	'response_buttons_color': ['w','e'],
+	'response_buttons_color': ['w','e']
 
 }
 
@@ -64,15 +64,22 @@ standard_parameters = {
 # 	'y' : 1 # CW    more horizontal 'l'
 # }
 
+# response_buttons = {
+# 	'w' : -1, # more yellow's'
+# 	'e' : 1, # more blue'f'
+# 	'b' : -1, # CCW  more vertical'j'
+# 	'y' : 1 # CW    more horizontal 'l'
+# }
+
 response_buttons = {
-	'w' : -1, # more yellow's'
-	'e' : 1, # more blue'f'
-	'b' : -1, # CCW  more vertical'j'
-	'y' : 1 # CW    more horizontal 'l'
+	standard_parameters['response_buttons_color'][0] : -1, 		# more yellow's' / 'b'
+	standard_parameters['response_buttons_color'][1] : 1, 		# more blue'f' / 'y'
+	standard_parameters['response_buttons_orientation'][0] : -1,# CCW  more vertical'j' / 'w'
+	standard_parameters['response_buttons_orientation'][1] : 1 	# CW    more horizontal 'l' / 'e'
 }
 
-screen_num = 1#1
-screen_res = (3840,2160)#(1024,768)#(1920,1080)#(1280,1024)#(1680,1050)#(3840,2160)#(1920,1080)(2560,1440)#(
+screen_num = 0#1
+screen_res = (2560,1440)#(3840,2160)#(1024,768)#(1920,1080)#(1280,1024)#(1680,1050)#(3840,2160)#(1920,1080)#(
 screen_dist = 60#225#60.0 # 159.0
 screen_size = (70,40)#(48, 38) # (70, 40)
 screen_full = True
