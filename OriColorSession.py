@@ -11,6 +11,8 @@ from pygame.locals import *
 
 # import Quest
 
+import ColorTools as ct
+
 sys.path.append( 'exp_tools' )
 # sys.path.append( os.environ['EXPERIMENT_HOME'] )
 
@@ -26,7 +28,7 @@ class OriColorSession(EyelinkSession):
 	def __init__(self, subject_initials, index_number,scanner, tracker_on):
 		super(OriColorSession, self).__init__( subject_initials, index_number)
 
-		self.create_screen( size = screen_res, full_screen = 0, physical_screen_distance = 159.0, background_color = background_color, physical_screen_size = (70, 40) )
+		self.create_screen( size = screen_res, full_screen = screen_full, physical_screen_distance = screen_dist, background_color = background_color, physical_screen_size = screen_size, screen_nr = screen_num )
 
 		self.create_output_file_name()
 		if tracker_on:
@@ -36,12 +38,16 @@ class OriColorSession(EyelinkSession):
 		else:
 			self.create_tracker(tracker_on = False)
 		
-		self.response_button_signs = response_button_signs
+		self.response_button_signs = response_buttons
+
+
+		self.last_taskdir = 0
+		self.last_colval = 0
 
 		self.scanner = scanner
 		# trials can be set up independently of the staircases that support their parameters
 		self.prepare_trials()
-		#self.prepare_staircases()
+		self.prepare_staircases()
 		#self.prepare_sounds()
 	
 	def prepare_trials(self):
@@ -55,72 +61,102 @@ class OriColorSession(EyelinkSession):
 		self.orientations = np.linspace(self.standard_parameters['stimulus_ori_min'], self.standard_parameters['stimulus_ori_max'], self.standard_parameters['stimulus_ori_steps']+1)
 		self.orientations = self.orientations[0:(self.standard_parameters['stimulus_ori_steps'])]
 
-		self.colors = np.linspace(0.0, 1.0, self.standard_parameters['stimulus_col_steps']+1)
-		self.colors = self.colors[0:(self.standard_parameters['stimulus_col_steps'])]			 
+		# Compute evenly-spaced steps in (L)ab-space
+
+		color_theta = (np.pi*2)/self.standard_parameters['stimulus_col_steps']
+		color_angle = color_theta * np.arange(self.standard_parameters['stimulus_col_min'], self.standard_parameters['stimulus_col_max'],dtype=float)
+		color_radius = self.standard_parameters['stimulus_col_rad']
+
+		color_a = color_radius * np.cos(color_angle)
+		color_b = color_radius * np.sin(color_angle)
+
+		self.colors = [ct.lab2psycho((self.standard_parameters['stimulus_col_baselum'], a, b)) for a,b in zip(color_a, color_b)]			 
 
 		self.stimulus_positions = self.standard_parameters['stimulus_positions']
 		
 		self.trial_array = []
 
 	
-		pos_array = []
+		self.trial_array = np.array([[[o,c[0],c[1],c[2]] for o in self.orientations] for c in self.colors]).reshape((self.standard_parameters['stimulus_ori_steps']*self.standard_parameters['stimulus_col_steps'],4))
+		# self.trial_array = np.tile(self.trial_array,(2,1))
+		# self.screen.close()
 
-		for d in self.orientations:
-			for t in self.colors:
-				pos_array.append([d, t])
+		# dbstop()
 
-		pos_array = pos_array*2
+		# trial_indices = np.tile(np.arange(0,len(pos_array)+1),(4,1))
+		# np.random.permutation(trial_indices)
 
-		emptytrials = self.standard_parameters['ntrials'] - len(pos_array)
-		for fnsti in range(emptytrials):
-			pos_array.append([])
-		pos_array = np.array(pos_array)
+		emptytrials = self.standard_parameters['mapper_ntrials'] - len(self.trial_array)
 
-		self.trial_array = [[],[],[],[]]
+		self.trial_indices = np.array([np.random.permutation(len(self.trial_array)+emptytrials) for i in range(4)]).T
 
-		for i in range(4):
+		# Add empty trials
+		for i in range(self.standard_parameters['mapper_pre_post_trials']):
+			self.trial_indices = np.vstack([[100,100,100,100], self.trial_indices, [100,100,100,100]])
 
-			self.trial_array[i].extend([[] for x in range(5)])
+		
+		# 
 
-			trial_thingie = pos_array.copy()
-			np.random.shuffle(trial_thingie)
+		# for fnsti in range(emptytrials):
+		# 	pos_array.append([])
+		# pos_array = np.array(pos_array)
 
-			self.trial_array[i].extend(trial_thingie)
-			self.trial_array[i].extend([[] for x in range(5)])
+		# self.trial_array = [[],[],[],[]]
 
-			# newarray = pos_array.copy()
+		# for i in range(4):
 
-			# np.random.shuffle(newarray)
+		# 	self.trial_array[i].extend([[] for x in range(5)])
 
-			
+		# 	trial_thingie = pos_array.copy()
+		# 	np.random.shuffle(trial_thingie)
+
+		# 	self.trial_array[i].extend(trial_thingie)
+		# 	self.trial_array[i].extend([[] for x in range(5)])
+
+		# 	# newarray = pos_array.copy()
+
+		# 	# np.random.shuffle(newarray)
+
+		# Task on X% of trials
+		# task_prob = 0.4
+
+		# min_diff = 1
+
+		#while min_diff == 1:
+		# self.task_trials = np.random.choice(range(len(self.trial_indices)), size=round(task_prob * len(self.trial_indices)), replace=False)
+			#min_diff = np.diff(np.sort(self.task_trials)).min()
+		
 
 			# self.trial_array.append(newarray)
 
-		self.trial_array = np.array(self.trial_array)
+		# self.trial_array = np.array(self.trial_array)
 
-		self.phase_durations = np.array([
-			-0.0001, # instruct time
-			1.00,	 # present instruction auditorily
-			-0.0001, # wait for scan pulse
-			self.standard_parameters['timing_stimulus_duration'] * self.standard_parameters['TR'], # present stimulus
-			self.standard_parameters['timing_ITI_duration'] * self.standard_parameters['TR'] ])	# ITI
+		self.phase_durations = np.array([self.standard_parameters['mapper_ITI_duration'] * self.standard_parameters['TR'], # present stimulus
+										 self.standard_parameters['mapper_stimulus_duration'] * self.standard_parameters['TR'] ])	# ITI
+
+
 
 		# fixation point
 		self.fixation_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=12.5, pos = np.array((0.0,0.0)), color = (0,0,0), maskParams = {'fringeWidth':0.4})
 		self.fixation_outer_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=17.5, pos = np.array((0.0,0.0)), color = (-1.0,-1.0,-1.0), maskParams = {'fringeWidth':0.4})
-		self.fixation = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=9.0, pos = np.array((0.0,0.0)), color = (-.5,-0.5,-0.5), opacity = 1.0, maskParams = {'fringeWidth':0.4})
+		self.fixation = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=9.0, pos = np.array((0.0,0.0)), color = np.array((1,1,1)), opacity = 1.0, maskParams = {'fringeWidth':0.4})
 		
 		#ecc_mask = filters.makeMask(matrixSize = 2048, shape='raisedCosine', radius=self.standard_parameters['stimulus_size'] * self.screen_pix_size[1] / self.screen_pix_size[0], center=(0.0, 0.0), range=[1, -1], fringeWidth=0.1 )
 		#self.mask_stim = visual.PatchStim(self.screen, mask=ecc_mask,tex=None, size=(self.screen_pix_size[0], self.screen_pix_size[0]), pos = np.array((0.0,0.0)), color = self.screen.background_color) # 
 	
+	def prepare_staircases(self):
+
+		# Create a separate staircase for every stimulus
+
+		self.staircase = ThreeUpOneDownStaircase(initial_value = 0.1, 
+												 initial_stepsize= 0.05,
+												 max_nr_trials = 100000)	
 	def close(self):
 		super(OriColorSession, self).close()
 
-		parsopf = open(self.output_file + '_trialOrder.pickle', 'a')
+		parsopf = open(self.output_file + '_trialinfo.pickle', 'a')
 
-		output = {}
-		output['trialOrder'] = self.trial_array
-		output['positionOrder'] = self.stimulus_positions
+		output = [self.trial_array, self.trial_indices, self.staircase]
 
 		pickle.dump(output,parsopf)
 
@@ -134,10 +170,39 @@ class OriColorSession(EyelinkSession):
 		"""docstring for fname"""
 		# cycle through trials
 
-		for i in range(5,10):#len(self.trial_array[0])):
+		# Wait to start th experiment
+		self.fixation_outer_rim.draw()
+		self.fixation_rim.draw()
+		self.fixation.draw()
+
+		this_instruction_string = 'Waiting for scanner to start'# self.parameters['task_instruction']
+		self.instruction = visual.TextStim(self.screen, text = this_instruction_string, pos = (0, -100.0), italic = True, height = 30, alignHoriz = 'center')
+		self.instruction.setSize((1200,50))
+		self.instruction.draw()
+
+		self.screen.flip()
+
+		print 'Waiting for scanner to start...'
+
+		#if self.scanner=='y':
+		event.waitKeys(keyList = ['t'])		
+
+		for i in range(len(self.trial_indices)):
 			# prepare the parameters of the following trial based on the shuffled trial array
+
 			this_trial_parameters = self.standard_parameters.copy()
-			this_trial_parameters['ori_color'] = self.trial_array[:,i]
+
+			this_trial_parameters['ori_color'] = [[],[],[],[]]
+
+			for posii in range(4):
+				if self.trial_indices[i,posii] < (8*8):
+					this_trial_parameters['ori_color'][posii] = self.trial_array[self.trial_indices[i,posii],:]
+
+			# this_trial_parameters['task_start'] = -1
+			# if i in self.task_trials:
+			# 	this_trial_parameters['task_start'] = np.random.random() * self.phase_durations.sum()
+
+
 			# this_trial_parameters['colors'] = [self.colors[self.trial_array[i,1]], self.colors[self.trial_array[i,3]], self.colors[self.trial_array[i,5]], self.colors[self.trial_array[i,7]]]
 
 			these_phase_durations = self.phase_durations.copy()
@@ -150,7 +215,7 @@ class OriColorSession(EyelinkSession):
 				break
 		self.close()
 		# Save both separate frame images and movie (attempt)
-		self.screen.saveMovieFrames('movie/expframe.png')			
+		# self.screen.saveMovieFrames('movie/expframe.png')			
 		#slef.screen.saveMovieFrames('expdemo.mp4', codec = 'libx264')
 	
 

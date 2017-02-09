@@ -27,7 +27,7 @@ import pygame
 from pygame.locals import *
 from scipy.io import wavfile
 
-import pyaudio, wave
+#import pyaudio, wave
 
 # from pylink import *
 
@@ -114,7 +114,10 @@ class Session(object):
 		# print 'screen: ' + str(self.screen_height_degrees) + ' degrees tall and pixels per degree: ' + str(self.pixels_per_degree)
 		
 		# supplanting the color+texture+mask shader
-		import psychopy.visual.shaders as shaders
+		try:
+			import psychopy.visual.shaders as shaders
+		except:
+			import psychopy._shadersPyglet as shaders
 
 		colorToBlackFragmentShader = '''
 		   uniform sampler2D texture, mask;
@@ -238,7 +241,7 @@ class EyelinkSession(Session):
 			# create actual tracker
 			try:
 				# self.tracker = EyeLink()
-				shell()
+				#shell()
 				self.tracker = eyetracker.EyeTracker(self.display, trackertype='eyelink', resolution=self.display.dispsize, data_file=self.eyelink_temp_file, bgc=self.display.bgc)
 				self.tracker_on = True
 			except:

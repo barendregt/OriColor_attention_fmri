@@ -4,7 +4,7 @@ import numpy as np
 from scipy.signal import convolve2d
 from IPython import embed as dbstop
 from math import *
-import random, sys, pyaudio, wave
+import random, sys #pyaudio, wave
 import colorsys
 import ColorTools as ct
 
@@ -39,6 +39,7 @@ class ExpectationStim(object):
 	def make_stimulus(self):
 
 		self.stimulus = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings['base_ori'], units = 'pix',  size = (self.size_pix, self.size_pix), pos = (self.trial_settings['trial_position_x']*self.session.pixels_per_degree, self.trial_settings['trial_position_y']*self.session.pixels_per_degree), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b']]))
+		#self.stimulus = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings['base_ori'], units = 'deg',  size = (self.size_pix, self.size_pix), pos = (self.trial_settings['trial_position_x'], self.trial_settings['trial_position_y']), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b']]))
 		#self.stimulus2 = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings[0] + self.trial.trial_ori_value,  size = (self.size_pix, self.size_pix), pos = (self.trial_settings[-2], self.trial_settings[-1]), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings[1], self.trial_settings[2] + self.trial.trial_color_value, self.trial_settings[3]]))
 		
 	def update_stimulus(self):

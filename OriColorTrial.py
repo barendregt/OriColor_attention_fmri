@@ -16,7 +16,7 @@ class OriColorTrial(Trial):
 	def __init__(self, parameters = {}, phase_durations = [], session = None, screen = None, tracker = None):
 		super(OriColorTrial, self).__init__(parameters = parameters, phase_durations = phase_durations, session = session, screen = screen, tracker = tracker)
 		
-		self.stim = OriColorStim(self.screen, self, self.session, orientation = self.parameters['ori_color'])
+		self.stim = OriColorStim(self.screen, self, self.session, trial_params = self.parameters['ori_color'])
 		
 		this_instruction_string = 'Waiting for scanner to start...'# self.parameters['task_instruction']
 		self.instruction = visual.TextStim(self.screen, text = this_instruction_string, font = 'Helvetica Neue', pos = (0, 0), italic = True, height = 30, alignHoriz = 'center')
@@ -26,42 +26,31 @@ class OriColorTrial(Trial):
 		self.instruct_time = self.t_time = self.fix_time = self.stimulus_time = self.post_stimulus_time = 0.0
 		self.instruct_sound_played = False
 		
+		self.parameterDict = self.parameters.copy()
 	
 	def draw(self):
 		"""docstring for draw"""
 		if self.phase == 0:
-			if self.ID == 0:
-				self.instruction.draw()
-			else:
-				self.session.fixation_outer_rim.draw()
-				self.session.fixation_rim.draw()
-				self.session.fixation.draw()
-		if self.phase == 1:
+			self.session.fixation_outer_rim.draw()
+			self.session.fixation_rim.draw()
+			self.session.fixation.draw()
+		
+		elif self.phase == 1:
 			self.session.fixation_outer_rim.draw()
 			self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 
-		elif self.phase == 2:
-			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
-			self.session.fixation.draw()
-			
-		elif self.phase == 3:
-			self.stim.draw(phase = np.max([(self.stimulus_time - self.t_time) / self.phase_durations[3],0]))
-		
-		elif self.phase == 4:
-			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
-			self.session.fixation.setColor((1,1,1))
-			self.session.fixation.draw()
+			self.phase_time = self.session.clock.getTime()
+
+			self.stim.draw(phase = self.phase_time - self.phase_time_start)
 			
 		super(OriColorTrial, self).draw( )
-		self.screen.getMovieFrame() # Save frame for movie, outside scanner!		
+		# self.screen.getMovieFrame() # Save frame for movie, outside scanner!		
 
 	def event(self):
 		for ev in event.getKeys():
 			if len(ev) > 0:
-				if ev in ['esc', 'escape', 'q']:
+				if ev in ['esc', 'escape','q']:
 					self.events.append([-99,self.session.clock.getTime()-self.start_time])
 					self.stopped = True
 					self.session.stopped = True
@@ -69,19 +58,24 @@ class OriColorTrial(Trial):
 				# it handles both numeric and lettering modes 
 				elif ev == ' ':
 					self.events.append([0,self.session.clock.getTime()-self.start_time])
-					if self.phase == 0:
+					if (self.phase == 0) & (self.ID==0):
 						self.phase_forward()
-					else:
-						self.events.append([-99,self.session.clock.getTime()-self.start_time])
-						self.stopped = True
-						print 'trial canceled by user'
+					# else:
+					# 	self.events.append([-99,self.session.clock.getTime()-self.start_time])
+					# 	self.stopped = True
+					# 	print 'trial canceled by user'
 				elif ev == 't': # TR pulse
-					self.events.append([99,self.session.clock.getTime()-self.start_time])
-					if (self.phase == 0) + (self.phase==2):
-						self.phase_forward()
-				elif ev in self.session.response_button_signs.keys():
-					if self.phase == 0:
-						self.phase_forward()
+					# self.events.append([99,self.session.clock.getTime()-self.start_time])
+					# if (self.phase == 0) + (self.phase==2):
+					# 	self.phase_forward()
+				elif ev in self.session.response_buttons.keys():
+					
+					if self.session.response_buttons[ev] == self.session.last_taskdir:
+						self.session.staircase.answer(1)
+					else:
+						self.session.staircase.answer(0)
+
+
 					# first check, do we even need an answer?
 					# if self.phase == 3:
 						# if self.stim.last_sampled_staircase != None:
@@ -121,47 +115,75 @@ class OriColorTrial(Trial):
 			super(OriColorTrial, self).key_event( ev )
 
 
+	# def run(self, ID = 0):
+	# 	self.ID = ID
+	# 	super(OriColorTrial, self).run()
+		
+	# 	while not self.stopped:
+	# 		self.run_time = self.session.clock.getTime() - self.start_time
+	# 		# Only in trial 1, phase 0 represents the instruction period.
+	# 		# After the first trial, this phase is skipped immediately
+	# 		if self.phase == 0:
+	# 			self.instruct_time = self.session.clock.getTime()
+	# 			if self.ID != 0:
+	# 				self.phase_forward()
+	# 		# In phase 1, we present the task instruction auditorily
+	# 		if self.phase == 1:
+	# 			self.fix_time = self.session.clock.getTime()
+	# 			# if not self.instruct_sound_played:
+	# 			# 	self.session.play_sound(self.session.task_instructions[self.parameters['task_index']].lower())
+	# 			# 	self.instruct_sound_played = True
+	# 			# this trial phase is timed
+	# 			# if( self.fix_time  - self.instruct_time ) > self.phase_durations[1]:
+	# 			self.phase_forward()
+	# 		# In phase 2, we wait for the scanner pulse (t)
+	# 		if self.phase == 2:
+	# 			self.t_time = self.session.clock.getTime()
+	# 			if self.session.scanner == 'n':
+	# 				self.phase_forward()
+	# 		# In phase 3, the stimulus is presented
+	# 		if self.phase == 3:
+	# 			self.stimulus_time = self.session.clock.getTime()
+	# 			if ( self.stimulus_time - self.t_time ) > self.phase_durations[3]:
+	# 				self.phase_forward()
+	# 		# Phase 4 reflects the ITI
+	# 		if self.phase == 4:
+	# 			self.post_stimulus_time = self.session.clock.getTime()
+	# 			if ( self.post_stimulus_time  - self.stimulus_time ) > self.phase_durations[4]:
+	# 				self.stopped = True
+		
+	# 		# events and draw
+	# 		self.event()
+	# 		self.draw()
+
+	
+	# 	self.stop()
+
+
 	def run(self, ID = 0):
 		self.ID = ID
 		super(OriColorTrial, self).run()
-		
+		self.parameterDict.update({'trial_start': self.start_time})
+
 		while not self.stopped:
 			self.run_time = self.session.clock.getTime() - self.start_time
-			# Only in trial 1, phase 0 represents the instruction period.
-			# After the first trial, this phase is skipped immediately
-			if self.phase == 0:
-				self.instruct_time = self.session.clock.getTime()
-				if self.ID != 0:
-					self.phase_forward()
-			# In phase 1, we present the task instruction auditorily
-			if self.phase == 1:
-				self.fix_time = self.session.clock.getTime()
-				# if not self.instruct_sound_played:
-				# 	self.session.play_sound(self.session.task_instructions[self.parameters['task_index']].lower())
-				# 	self.instruct_sound_played = True
-				# this trial phase is timed
-				# if( self.fix_time  - self.instruct_time ) > self.phase_durations[1]:
-				self.phase_forward()
-			# In phase 2, we wait for the scanner pulse (t)
-			if self.phase == 2:
-				self.t_time = self.session.clock.getTime()
-				if self.session.scanner == 'n':
-					self.phase_forward()
-			# In phase 3, the stimulus is presented
-			if self.phase == 3:
-				self.stimulus_time = self.session.clock.getTime()
-				if ( self.stimulus_time - self.t_time ) > self.phase_durations[3]:
-					self.phase_forward()
-			# Phase 4 reflects the ITI
-			if self.phase == 4:
-				self.post_stimulus_time = self.session.clock.getTime()
-				if ( self.post_stimulus_time  - self.stimulus_time ) > self.phase_durations[4]:
-					self.stopped = True
-		
+
+			# if (self.parameterDict['task_start'] <= self.run_time) and ((self.parameterDict['task_start']+self.session.standard_parameters['mapper_task_duration']) >= self.run_time):
+
+			# 	self.session.last_colval = self.session.staircase.get_intensity()
+			# 	self.session.last_taskdir = 2*np.random.random()-1
+			# 	self.session.fixation.color = self.session.last_taskdir * np.array((self.session.last_colval, self.session.last_colval, self.session.last_colval))
+
 			# events and draw
 			self.event()
 			self.draw()
+			
+			if self.run_time >= np.sum(self.phase_durations[0:(self.phase+1)]):
+				self.phase_forward()
+				self.phase_time_start = self.session.clock.getTime()
 
-	
-		self.stop()
+			if self.phase == len(self.phase_durations):
+				self.stopped = True
+
+		self.stop()		
 		

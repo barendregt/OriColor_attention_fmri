@@ -27,7 +27,7 @@ class ExpectationSession(EyelinkSession):
 
 		self.create_output_file_name()
 		if tracker_on:
-			self.create_tracker(auto_trigger_calibration = 1, calibration_type = 'HV9')
+			self.create_tracker(auto_trigger_calibration = 1, calibration_type = 'HV5')
 			if self.tracker_on:
 				self.tracker_setup()
 		else:
@@ -224,12 +224,12 @@ class ExpectationSession(EyelinkSession):
 		
 	def close(self):
 		
-		# this_instruction_string = 'Exporting data, please wait'# self.parameters['task_instruction']
-		# self.instruction = visual.TextStim(self.screen, text = this_instruction_string, pos = (0, -100.0), italic = True, height = 30, alignHoriz = 'center')
-		# self.instruction.setSize((1200,50))
-		# self.instruction.draw()
+		this_instruction_string = 'Exporting data, please wait'# self.parameters['task_instruction']
+		self.instruction = visual.TextStim(self.screen, text = this_instruction_string, pos = (0, -100.0), italic = True, height = 20, alignHoriz = 'center')
+		self.instruction.setSize((1200,50))
+		self.instruction.draw()
 
-		# self.screen.flip()		tttttttttttt
+		self.screen.flip()		
 		
 		#self.outputDict['trials'] = self.trial_array
 
@@ -279,18 +279,18 @@ class ExpectationSession(EyelinkSession):
 
 		print 'Waiting for scanner to start...'
 
-		if self.scanner==1:
-			event.waitKeys(keyList = ['t'])
+		#if self.scanner=='y':
+		event.waitKeys(keyList = ['t'])
 
-			self.fixation_outer_rim.draw()
-			self.fixation_rim.draw()
-			self.fixation.draw()
+		self.fixation_outer_rim.draw()
+		self.fixation_rim.draw()
+		self.fixation.draw()
 
-			self.screen.flip()
+		self.screen.flip()
 
-			time.sleep(15)
-		else:
-			event.waitKeys(keyList = ['space'])		
+		time.sleep(15)
+		#else:
+		#	event.waitKeys(keyList = ['space'])		
 
 
 		event.clearEvents()
@@ -332,8 +332,8 @@ class ExpectationSession(EyelinkSession):
 
 		self.screen.flip()
 
-		if (self.scanner==1) and (not self.stopped):
-			time.sleep(15)
+		#if (self.scanner=='y') and (not self.stopped):
+		#time.sleep(15)
 				
 		self.close()
 	

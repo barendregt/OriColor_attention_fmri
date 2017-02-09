@@ -129,8 +129,8 @@ class ThreeUpOneDownStaircase(TwoUpOneDownStaircase):
 					continue_after_this_trial = False
 			else: 
 				pass
-			if self.nr_trials >= self.max_nr_trials:
-				continue_after_this_trial = False
+			#if self.nr_trials >= self.max_nr_trials:
+			#	continue_after_this_trial = False
 		
 		return continue_after_this_trial
 	
