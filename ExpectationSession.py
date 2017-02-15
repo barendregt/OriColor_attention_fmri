@@ -277,6 +277,8 @@ class ExpectationSession(EyelinkSession):
 
 		self.screen.flip()
 
+		#print 'Expected total duration: %3.2fs (%1.0f TRs)' % (1.0,2.0)#(self.phase_durations.sum() * len(self.trials), (self.phase_durations.sum() * len(self.trials)) / self.standard_parameters['TR'])
+
 		print 'Waiting for scanner to start...'
 
 		#if self.scanner=='y':

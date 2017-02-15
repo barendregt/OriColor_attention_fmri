@@ -141,7 +141,7 @@ class ExpectationTrial(Trial):
 	def event(self):
 		for ev in event.getKeys():
 			if len(ev) > 0:
-				if ev in ['esc', 'escape', 'q']:
+				if ev in ['esc', 'escape']:
 					self.events.append([-99,self.session.clock.getTime()-self.start_time])
 					self.stopped = True
 					self.session.stopped = True
