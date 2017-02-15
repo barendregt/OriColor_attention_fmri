@@ -7,16 +7,16 @@ standard_parameters = {
 	'TR':               	 0.945,		# VERY IMPORTANT TO FILL IN!! (in secs)
 	# 'number_of_quest_trials':  120,		# this needs to divide into 8
 	# 'number_of_trials':       400,		# this needs to divide into 8
-	'ntrials_per_stim':		 24,#100,   # this * 8 will be the total number of trials
-	'mapper_ntrials':		       168,
+	'ntrials_per_stim':		 24,#100,   # this * 4 will be the total number of trials
+	'mapper_ntrials':		      100,# 168,
 	'mapper_max_index': 63,
 	
 	## stimulus parameters:calc
-	'stimulus_size': 3.0,#1.5,	# diameter in dva
+	'stimulus_size': 2.5,#1.5,	# diameter in dva
 
 	'stimulus_positions': ([2.5, 2.5], [2.5, -2.5], [-2.5, -2.5], [-2.5, 2.5],[2.5, 2.5],[-2.5, 2.5],[-2.5, -2.5], [2.5, -2.5]),#(0.0, 0.0),
 
-	'stimulus_base_spatfreq': 0.02,#0.04,
+	'stimulus_base_spatfreq': 4,#0.04,#0.02,#0.04,
 
 	'stimulus_base_orientation': (0,90),#(45, 135),
 	'stimulus_base_colors': ((55,80,75), (55,-80,75)),
@@ -40,10 +40,9 @@ standard_parameters = {
 	'timing_start_empty': 15,
 	'timing_finish_empty': 15,
 
-	'timing_stim_1_Duration' : .10, # duration of stimulus presentation, in sec
-	'timing_ISI'             : .05,
-	'timing_stim_2_Duration' : .10, # duration of stimulus presentation, in sec
-	# 'timing_preStimDuration' : 0.75, # SOA will be random between 1 frame and this
+	'timing_stim_1_Duration' : .15, # duration of stimulus presentation, in sec
+	'timing_ISI'             : .03,
+	'timing_stim_2_Duration' : .15, # duration of stimulus presentation, in sec
 	'timing_cue_duration'    : 0.75,	# Duration for each cue separately
 	'timing_stimcue_interval' : 0.5,
 	'timing_responseDuration' : 1.5,#2.75, # time to respond	
@@ -63,9 +62,11 @@ standard_parameters = {
 	'stimulus_col_rad':			  75,		# radius of color circle
 	'stimulus_col_baselum':		  55,	    # L
 
-	'mapper_pre_post_trials':		 5,
+	'mapper_pre_post_trials':		 0,#5,
 	'mapper_stimulus_duration':      1.0,		# in TR
-	'mapper_task_duration':			 2.0,    # in TR
+	'mapper_task_duration':			 0.5,    # in TR
+	'mapper_response_duration':		 1.0,	 # in TR
+	'mapper_task_timing':			(1.0, 8.0), # min and max separation of fix task
 	'mapper_ITI_duration':           2.0,		# in TR
 	'mapper_n_redraws':		 	 	 10.0,		# refresh random phase this many times during presentation	
 	'mapper_mapper_redraws':		20.0	
@@ -101,6 +102,6 @@ response_buttons = {
 screen_num = -1#0#1
 screen_res = (2560,1440)#(1920,1080)#(2560,1440)#(3840,2160)#(1024,768)#(1920,1080)#(1280,1024)#(1680,1050)#(3840,2160)#(1920,1080)#(
 screen_dist = 60#112.5#60#225#60#225#60.0 # 159.0
-screen_size = (69.84,39.29)#(48, 38) # (70, 40)
+screen_size = (33,22)#(69.84,39.29)#(48, 38) # (70, 40)
 screen_full = False
 background_color = (0.0, 0.0, 0.0)

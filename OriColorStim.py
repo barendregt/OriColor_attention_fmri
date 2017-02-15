@@ -33,12 +33,12 @@ class OriColorStim(object):
 		for i,c in enumerate(self.trial_params):
 			if len(c):
 
-				self.element_array.append(visual.GratingStim(self.screen, tex = 'sqr', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = c[0], units = 'pix',  size = (self.size_pix, self.size_pix), pos = (self.session.stimulus_positions[i][0]*self.session.pixels_per_degree, self.session.stimulus_positions[i][1]*self.session.pixels_per_degree), colorSpace = 'rgb', color = c[1:]))
+				#self.element_array.append(visual.GratingStim(self.screen, tex = 'sqr', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = c[0], units = 'pix',  size = (self.size_pix, self.size_pix), pos = (self.session.stimulus_positions[i][0]*self.session.pixels_per_degree, self.session.stimulus_positions[i][1]*self.session.pixels_per_degree), colorSpace = 'rgb', color = c[1:]))
 
-				#self.colors.append([rgbc*255.0 for rgbc in colorsys.hls_to_rgb(c[1], .5, 1)])
-				# self.colors.append(ct.lab2psycho(c[1:]))
-				# self.positions.append((self.session.stimulus_positions[i][0]*session.pixels_per_degree,self.session.stimulus_positions[i][1]*session.pixels_per_degree))
-				# self.orientations.append(c[0])
+				# self.colors.append([rgbc*255.0 for rgbc in colorsys.hls_to_rgb(c[1], .5, 1)])
+				self.colors.append(c[1:])
+				self.positions.append((self.session.stimulus_positions[i][0]*session.pixels_per_degree,self.session.stimulus_positions[i][1]*session.pixels_per_degree))
+				self.orientations.append(c[0])
 
 		self.period = session.standard_parameters['mapper_stimulus_duration'] * session.standard_parameters['TR']
 		self.refresh_frequency = self.period / session.standard_parameters['mapper_n_redraws']
@@ -58,16 +58,17 @@ class OriColorStim(object):
 
 		# make this stimulus array a session variable, in order to have to create it only once...
 		# if not hasattr(session, 'element_array'):
-		# self.element_array = None
-		# if len(self.colors):
-		# 	self.element_array = visual.ElementArrayStim(screen, elementTex = 'sqr', elementMask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, nElements = len(self.positions), sizes = session.standard_parameters['stimulus_size'] * session.pixels_per_degree, sfs = session.standard_parameters['stimulus_base_spatfreq'], xys = self.positions, oris = self.orientations, colors = self.colors, colorSpace = 'rgb', units='pix') 
+		self.element_array = None
+		if len(self.colors):
+			self.element_array = visual.ElementArrayStim(screen, elementTex = 'sqr', elementMask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, nElements = len(self.positions), sizes = session.standard_parameters['stimulus_size'] * session.pixels_per_degree, sfs = session.standard_parameters['stimulus_base_spatfreq'], xys = self.positions, oris = self.orientations, colors = self.colors, colorSpace = 'rgb', units='pix') 
+
 
 	
 	def draw(self, phase = 0):
 		self.phase = phase
 		self.frames += 1
 
-		if len(self.element_array):
+		if self.element_array is not None:#len(self.element_array):
 
 			if (self.phase - self.last_redraw) > self.refresh_frequency:
 				self.redraws += 1
@@ -75,15 +76,15 @@ class OriColorStim(object):
 				self.last_redraw = self.phase
 
 					# self.populate_stimulus()
-				for ii in range(len(self.element_array)):
-					self.element_array[ii].phase = (self.redraws * 0.5) % 1
+				# for ii in range(len(self.element_array)):
+				# 	self.element_array[ii].phase = (self.redraws * 0.5) % 1
 
 				
 			# if fmod(self.phase * self.period * self.refresh_frequency, 1.0) > 0.5: 
-			# self.element_array.setPhases(self.element_speeds * self.phase * self.period + self.element_phases)
-			for ii in range(len(self.element_array)):
-				self.element_array[ii].draw()
-
+				self.element_array.setPhases((self.redraws * 0.5) % 1)
+			# for ii in range(len(self.element_array)):
+			# 	self.element_array[ii].draw()
+			self.element_array.draw()
 		# log_msg = 'stimulus draw for phase %f, at %f'%(phase, self.session.clock.getTime())
 		# self.trial.events.append( log_msg )
 		# if self.session.tracker:

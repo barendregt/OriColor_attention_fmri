@@ -39,7 +39,14 @@ class OriColorSession(EyelinkSession):
 			self.create_tracker(tracker_on = False)
 		
 		self.response_button_signs = response_buttons
+		self.response_buttons = response_buttons
 
+		self.task_timing = (0.0, 0.0)
+		self.response_timing = (0.0, 0.0)
+		self.next_task_time = 0.0
+		self.pulse_task = False
+		self.last_task_val = 0
+		self.task_responded = False
 
 		self.last_taskdir = 0
 		self.last_colval = 0
@@ -135,11 +142,12 @@ class OriColorSession(EyelinkSession):
 										 self.standard_parameters['mapper_stimulus_duration'] * self.standard_parameters['TR'] ])	# ITI
 
 
+		
 
 		# fixation point
 		self.fixation_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=12.5, pos = np.array((0.0,0.0)), color = (0,0,0), maskParams = {'fringeWidth':0.4})
-		self.fixation_outer_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=17.5, pos = np.array((0.0,0.0)), color = (-1.0,-1.0,-1.0), maskParams = {'fringeWidth':0.4})
-		self.fixation = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=9.0, pos = np.array((0.0,0.0)), color = np.array((1,1,1)), opacity = 1.0, maskParams = {'fringeWidth':0.4})
+		self.fixation_outer_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=22.5, pos = np.array((0.0,0.0)), color = (-1.0,-1.0,-1.0), maskParams = {'fringeWidth':0.4})
+		self.fixation = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=20.0, pos = np.array((0.0,0.0)), color = np.array((0,0,0)), opacity = 1.0, maskParams = {'fringeWidth':0.4})
 		
 		#ecc_mask = filters.makeMask(matrixSize = 2048, shape='raisedCosine', radius=self.standard_parameters['stimulus_size'] * self.screen_pix_size[1] / self.screen_pix_size[0], center=(0.0, 0.0), range=[1, -1], fringeWidth=0.1 )
 		#self.mask_stim = visual.PatchStim(self.screen, mask=ecc_mask,tex=None, size=(self.screen_pix_size[0], self.screen_pix_size[0]), pos = np.array((0.0,0.0)), color = self.screen.background_color) # 
@@ -148,13 +156,50 @@ class OriColorSession(EyelinkSession):
 
 		# Create a separate staircase for every stimulus
 
-		self.staircase = ThreeUpOneDownStaircase(initial_value = 0.1, 
-												 initial_stepsize= 0.05,
+		self.staircase = ThreeUpOneDownStaircase(initial_value = 0.5, 
+												 initial_stepsize= 0.1,
+												 stepsize_multiplication_on_reversal = 0.85,
 												 max_nr_trials = 100000)	
+	
+
+	def time_for_next_task(self):
+
+		#pulse_task = False
+
+		current_time = self.clock.getTime()
+
+		if (not self.pulse_task) and (current_time >= self.next_task_time):
+			self.next_task_time = current_time + (self.standard_parameters['mapper_task_timing'][0] + np.random.random() * self.standard_parameters['mapper_task_timing'][1])
+			self.pulse_task = True
+			self.task_timing = (current_time, current_time + self.standard_parameters['mapper_task_duration'])
+			self.response_timing = (current_time, current_time + self.standard_parameters['mapper_response_duration'])
+			self.task_direction = 2*np.random.random() - 1
+			self.task_responded = False
+		elif self.pulse_task and (current_time > self.task_timing[1]):
+			self.pulse_task = False 
+
+			if not self.task_responded: # count not responding as an error
+				self.staircase.answer(0, self.last_task_val)
+
+				log_msg = 'staircase auto-updated from %f to %f after no response at %f'%( self.last_task_val, self.staircase.get_intensity(), self.clock.getTime() )
+
+				self.last_task_val = min([max([self.session.staircase.get_intensity(), 0.05]), 0.95])
+
+				self.events.append( log_msg )
+				print log_msg
+
+				if self.tracker:
+					self.tracker.log( log_msg )
+
+			self.task_responded = False
+
+		return self.pulse_task
+
+
 	def close(self):
 		super(OriColorSession, self).close()
 
-		parsopf = open(self.output_file + '_trialinfo.pickle', 'a')
+		parsopf = open(self.output_file + '_trialinfo.pickle', 'wb')
 
 		output = [self.trial_array, self.trial_indices, self.staircase]
 
@@ -170,9 +215,14 @@ class OriColorSession(EyelinkSession):
 		"""docstring for fname"""
 		# cycle through trials
 
+
+		# self.screen.close()
+		# dbstop()
+
+
 		# Wait to start th experiment
 		self.fixation_outer_rim.draw()
-		self.fixation_rim.draw()
+		#self.fixation_rim.draw()
 		self.fixation.draw()
 
 		this_instruction_string = 'Waiting for scanner to start'# self.parameters['task_instruction']
@@ -187,9 +237,11 @@ class OriColorSession(EyelinkSession):
 		#if self.scanner=='y':
 		event.waitKeys(keyList = ['t'])		
 
+		start_time = self.clock.getTime()
+
 		for i in range(len(self.trial_indices)):
 			# prepare the parameters of the following trial based on the shuffled trial array
-
+			trial_start_time = self.clock.getTime()
 			this_trial_parameters = self.standard_parameters.copy()
 
 			this_trial_parameters['ori_color'] = [[],[],[],[]]
@@ -209,10 +261,15 @@ class OriColorSession(EyelinkSession):
 
 			this_trial = OriColorTrial(this_trial_parameters, phase_durations = these_phase_durations, session = self, screen = self.screen, tracker = self.tracker)
 			
-			# run the prepared trial
+				# run the prepared trial
 			this_trial.run(ID = i)
+
+			print "trial #%i took %fs to run" %(i, self.clock.getTime()-trial_start_time)
+
 			if self.stopped == True:
 				break
+		
+		print self.clock.getTime() - start_time
 		self.close()
 		# Save both separate frame images and movie (attempt)
 		# self.screen.saveMovieFrames('movie/expframe.png')			

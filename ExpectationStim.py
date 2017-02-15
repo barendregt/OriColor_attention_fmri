@@ -38,19 +38,20 @@ class ExpectationStim(object):
 
 	def make_stimulus(self):
 
-		self.stimulus = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings['base_ori'], units = 'pix',  size = (self.size_pix, self.size_pix), pos = (self.trial_settings['trial_position_x']*self.session.pixels_per_degree, self.trial_settings['trial_position_y']*self.session.pixels_per_degree), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b']]))
+		self.stimulus = visual.ElementArrayStim(self.screen, elementTex = 'sqr', elementMask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, nElements = 1, sizes = self.session.standard_parameters['stimulus_size'] * self.session.pixels_per_degree, sfs = self.session.standard_parameters['stimulus_base_spatfreq'], xys = np.array((self.trial_settings['trial_position_x']*self.session.pixels_per_degree, self.trial_settings['trial_position_y']*self.session.pixels_per_degree))[np.newaxis,:], oris = self.trial_settings['base_ori'], colors = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b']]), colorSpace = 'rgb', units='pix') 
+		# self.stimulus = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings['base_ori'], units = 'pix',  size = (self.size_pix, self.size_pix), pos = (self.trial_settings['trial_position_x']*self.session.pixels_per_degree, self.trial_settings['trial_position_y']*self.session.pixels_per_degree), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b']]))
 		#self.stimulus = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings['base_ori'], units = 'deg',  size = (self.size_pix, self.size_pix), pos = (self.trial_settings['trial_position_x'], self.trial_settings['trial_position_y']), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b']]))
 		#self.stimulus2 = visual.GratingStim(self.screen, tex = 'sin', mask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, texRes = 1024, sf = self.session.standard_parameters['stimulus_base_spatfreq'], ori = self.trial_settings[0] + self.trial.trial_ori_value,  size = (self.size_pix, self.size_pix), pos = (self.trial_settings[-2], self.trial_settings[-1]), colorSpace = 'rgb', color = ct.lab2psycho([self.trial_settings[1], self.trial_settings[2] + self.trial.trial_color_value, self.trial_settings[3]]))
 		
 	def update_stimulus(self):
 		#pass	
-		self.stimulus.ori = self.trial_settings['base_ori'] + self.trial.trial_ori_value
+		self.stimulus.oris = self.trial_settings['base_ori'] + self.trial.trial_ori_value
 		if self.trial.col_trial_direction > 0:
 			#print [self.trial_settings[1], self.trial_settings[2], self.trial_settings[3] - abs(self.trial.trial_color_value)
 					
-			self.stimulus.color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b'] - abs(self.trial.trial_color_value)])
+			self.stimulus.colors = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'], self.trial_settings['base_color_b'] - abs(self.trial.trial_color_value)])
 		else:
-			self.stimulus.color = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'] - self.trial.trial_color_value, self.trial_settings['base_color_b']])
+			self.stimulus.colors = ct.lab2psycho([self.trial_settings['base_color_lum'], self.trial_settings['base_color_a'] - self.trial.trial_color_value, self.trial_settings['base_color_b']])
 
 	def play_warning_sound(self):
 		
@@ -96,7 +97,8 @@ class ExpectationStim(object):
 	 	self.task_stim = visual.TextStim(self.screen, text = taskMessage, color = 'black', bold = True, pos = (0.0,0.0), height = 0.4 * self.session.pixels_per_degree)			
 		self.response_stim = visual.TextStim(self.screen, text = '?', color = 'black', bold = True, pos = (0.0,0.0), height = 0.4 * self.session.pixels_per_degree)				 	
 
-		self.pointer = visual.Line(self.screen, start = (np.sign(self.trial_settings['trial_position_x']) * 0.25 * self.session.pixels_per_degree, np.sign(self.trial_settings['trial_position_y']) * 0.25 * self.session.pixels_per_degree), end = (self.session.pixels_per_degree*self.trial_settings['trial_position_x']/3.0, self.session.pixels_per_degree*self.trial_settings['trial_position_y']/3.0))
+		#self.pointer = visual.Line(self.screen, start = (np.sign(self.trial_settings['trial_position_x']) * 0.25 * self.session.pixels_per_degree, np.sign(self.trial_settings['trial_position_y']) * 0.25 * self.session.pixels_per_degree), end = (self.session.pixels_per_degree*self.trial_settings['trial_position_x']/3.0, self.session.pixels_per_degree*self.trial_settings['trial_position_y']/3.0))
+		self.pointer = visual.Rect(self.screen, lineColor = (0,0,0), fillColor = (0,0,0), width = 0.5 * self.session.pixels_per_degree, height = 0.5 * self.session.pixels_per_degree, pos = (np.sign(self.trial_settings['trial_position_x']) * 0.25 * self.session.pixels_per_degree, np.sign(self.trial_settings['trial_position_y']) * 0.25 * self.session.pixels_per_degree))
 
 	def play_cue_sound(self):
 		
@@ -127,9 +129,13 @@ class ExpectationStim(object):
 	def draw(self, phase = 0):
 		self.phase = phase		
 		
-		if (self.phase >= 1) and (self.phase < 3):
-			self.task_stim.draw()
+		if self.phase == 0:
 			self.pointer.draw()
+
+		if (self.phase >= 1) and (self.phase < 3):
+			
+			#self.pointer.draw()
+			self.task_stim.draw()
 
 		if self.phase == 3:
 			self.stimulus.draw()

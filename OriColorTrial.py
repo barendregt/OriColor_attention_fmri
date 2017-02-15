@@ -22,6 +22,8 @@ class OriColorTrial(Trial):
 		self.instruction = visual.TextStim(self.screen, text = this_instruction_string, font = 'Helvetica Neue', pos = (0, 0), italic = True, height = 30, alignHoriz = 'center')
 		self.instruction.setSize((1200,50))
 
+		self.fix_col_val = 0.0
+
 		self.run_time = 0.0
 		self.instruct_time = self.t_time = self.fix_time = self.stimulus_time = self.post_stimulus_time = 0.0
 		self.instruct_sound_played = False
@@ -31,13 +33,15 @@ class OriColorTrial(Trial):
 	def draw(self):
 		"""docstring for draw"""
 		if self.phase == 0:
+			self.session.fixation.color = (self.fix_col_val, self.fix_col_val, self.fix_col_val)
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
+			# self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 		
 		elif self.phase == 1:
+			self.session.fixation.color = (self.fix_col_val, self.fix_col_val, self.fix_col_val)
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
+			# self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 
 			self.phase_time = self.session.clock.getTime()
@@ -50,7 +54,7 @@ class OriColorTrial(Trial):
 	def event(self):
 		for ev in event.getKeys():
 			if len(ev) > 0:
-				if ev in ['esc', 'escape','q']:
+				if ev in ['esc', 'escape']:
 					self.events.append([-99,self.session.clock.getTime()-self.start_time])
 					self.stopped = True
 					self.session.stopped = True
@@ -64,46 +68,54 @@ class OriColorTrial(Trial):
 					# 	self.events.append([-99,self.session.clock.getTime()-self.start_time])
 					# 	self.stopped = True
 					# 	print 'trial canceled by user'
-				elif ev == 't': # TR pulse
-					# self.events.append([99,self.session.clock.getTime()-self.start_time])
-					# if (self.phase == 0) + (self.phase==2):
-					# 	self.phase_forward()
+				# elif ev == 't': # TR pulse
+				# 	# self.events.append([99,self.session.clock.getTime()-self.start_time])
+				# 	# if (self.phase == 0) + (self.phase==2):
+				# 	# 	self.phase_forward()
 				elif ev in self.session.response_buttons.keys():
-					
-					if self.session.response_buttons[ev] == self.session.last_taskdir:
-						self.session.staircase.answer(1)
-					else:
-						self.session.staircase.answer(0)
+
+					# Check if the response is within the time window
+					if self.session.clock.getTime() < self.session.response_timing[1]:
+						
+						if self.session.response_buttons[ev] == self.session.task_direction:
+							response = 1						
+						else:
+							response = 0
+
+						self.session.staircase.answer(response)
+
+						self.session.task_responded = True
 
 
-					# first check, do we even need an answer?
-					# if self.phase == 3:
-						# if self.stim.last_sampled_staircase != None:
-						# 	# what value were we presenting at?
-						# 	test_value = self.session.staircases[self.stim.last_sampled_staircase].quantile()
-						# 	if self.session.tasks[self.parameters['task_index']] == 'Color':
-						# 		response = self.session.response_button_signs[ev]*self.stim.present_color_task_sign
-						# 	elif self.session.tasks[self.parameters['task_index']] == 'Speed':
-						# 		response = self.session.response_button_signs[ev]*self.stim.present_speed_task_sign
-						# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix':
-						# 		response = self.session.response_button_signs[ev]*self.stim.present_fix_task_sign
-						# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix_no_stim':
-						# 		response = self.session.response_button_signs[ev]*self.stim.present_fns_task_sign
+						# first check, do we even need an answer?
+						# if self.phase == 3:
+							# if self.stim.last_sampled_staircase != None:
+							# 	# what value were we presenting at?
+							# 	test_value = self.session.staircases[self.stim.last_sampled_staircase].quantile()
+							# 	if self.session.tasks[self.parameters['task_index']] == 'Color':
+							# 		response = self.session.response_button_signs[ev]*self.stim.present_color_task_sign
+							# 	elif self.session.tasks[self.parameters['task_index']] == 'Speed':
+							# 		response = self.session.response_button_signs[ev]*self.stim.present_speed_task_sign
+							# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix':
+							# 		response = self.session.response_button_signs[ev]*self.stim.present_fix_task_sign
+							# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix_no_stim':
+							# 		response = self.session.response_button_signs[ev]*self.stim.present_fns_task_sign
 
-						# 	# update the staircase
-						# 	self.session.staircases[self.stim.last_sampled_staircase].update(test_value,(response+1)/2)
-						# 	# now block the possibility of further updates
-						# 	self.stim.last_sampled_staircase = None
+							# 	# update the staircase
+							# 	self.session.staircases[self.stim.last_sampled_staircase].update(test_value,(response+1)/2)
+							# 	# now block the possibility of further updates
+							# 	self.stim.last_sampled_staircase = None
 
-						# 	if self.session.tasks[self.parameters['task_index']] != 'Fix_no_stim':
-						# 		log_msg = 'staircase %s bin %d updated from %f after response %s at %f'%( self.session.tasks[self.parameters['task_index']], self.stim.eccentricity_bin,test_value, str((response+1)/2), self.session.clock.getTime() )
-						# 	else:
-						# 		log_msg = 'staircase %s updated from %f after response %s at %f'%( self.session.tasks[self.parameters['task_index']], test_value, str((response+1)/2), self.session.clock.getTime() )
+							# 	if self.session.tasks[self.parameters['task_index']] != 'Fix_no_stim':
+							# 		log_msg = 'staircase %s bin %d updated from %f after response %s at %f'%( self.session.tasks[self.parameters['task_index']], self.stim.eccentricity_bin,test_value, str((response+1)/2), self.session.clock.getTime() )
+							# 	else:
+						log_msg = 'staircase updated from %f to %f after response %s at %f'%( self.session.last_task_val, self.session.staircase.get_intensity(), str(response), self.session.clock.getTime() )
 
-						# 	self.events.append( log_msg )
-						# 	print log_msg
-						# 	if self.session.tracker:
-						# 		self.session.tracker.log( log_msg )
+						self.events.append( log_msg )
+						print log_msg
+
+						if self.session.tracker:
+							self.session.tracker.log( log_msg )
 
 
 
@@ -165,25 +177,35 @@ class OriColorTrial(Trial):
 		super(OriColorTrial, self).run()
 		self.parameterDict.update({'trial_start': self.start_time})
 
+		#print self.start_time
+
 		while not self.stopped:
 			self.run_time = self.session.clock.getTime() - self.start_time
 
-			# if (self.parameterDict['task_start'] <= self.run_time) and ((self.parameterDict['task_start']+self.session.standard_parameters['mapper_task_duration']) >= self.run_time):
+			if self.run_time >= self.phase_durations.sum():
+				self.stopped = True
+				break
 
-			# 	self.session.last_colval = self.session.staircase.get_intensity()
-			# 	self.session.last_taskdir = 2*np.random.random()-1
-			# 	self.session.fixation.color = self.session.last_taskdir * np.array((self.session.last_colval, self.session.last_colval, self.session.last_colval))
-
-			# events and draw
-			self.event()
-			self.draw()
-			
 			if self.run_time >= np.sum(self.phase_durations[0:(self.phase+1)]):
 				self.phase_forward()
 				self.phase_time_start = self.session.clock.getTime()
 
 			if self.phase == len(self.phase_durations):
 				self.stopped = True
+				break
 
+			if self.session.time_for_next_task():
+				self.fix_col_val = self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.05]), 0.95])
+				self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.05]), 0.95])
+			else:
+				self.fix_col_val = 0.0
+
+			# events and draw
+			self.event()
+			self.draw()
+			
+
+
+		#print self.run_time
 		self.stop()		
 		

@@ -261,13 +261,13 @@ class ExpectationSession(EyelinkSession):
 
 		# fixation point
 		self.fixation_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=0.5 * self.pixels_per_degree, pos = np.array((0.0,0.0)), color = (1.0, 1.0, 1.0), maskParams = {'fringeWidth':0.4})
-		self.fixation_outer_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=0.5 * self.pixels_per_degree, pos = np.array((0.0,0.0)), color = (1.0, 1.0, 1.0), maskParams = {'fringeWidth':0.4})
+		self.fixation_outer_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=0.51 * self.pixels_per_degree, pos = np.array((0.0,0.0)), color = (-.8, -.8, -.8), maskParams = {'fringeWidth':0.4})
 		self.fixation = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=0.5 * self.pixels_per_degree, pos = np.array((0.0,0.0)), color = (1.0, 1.0, 1.0), opacity = 1.0, maskParams = {'fringeWidth':0.4})
 
 
 		# Wait to start th experiment
 		self.fixation_outer_rim.draw()
-		self.fixation_rim.draw()
+		#self.fixation_rim.draw()
 		self.fixation.draw()
 
 		this_instruction_string = 'Waiting for scanner to start'# self.parameters['task_instruction']
@@ -283,12 +283,13 @@ class ExpectationSession(EyelinkSession):
 		event.waitKeys(keyList = ['t'])
 
 		self.fixation_outer_rim.draw()
-		self.fixation_rim.draw()
+		# self.fixation_rim.draw()
 		self.fixation.draw()
 
 		self.screen.flip()
 
-		time.sleep(15)
+		if self.scanner == 'y':
+			time.sleep(self.standard_parameters['timing_start_empty'])
 		#else:
 		#	event.waitKeys(keyList = ['space'])		
 
@@ -327,13 +328,13 @@ class ExpectationSession(EyelinkSession):
 			
 
 		self.fixation_outer_rim.draw()
-		self.fixation_rim.draw()
+		# self.fixation_rim.draw()
 		self.fixation.draw()
 
 		self.screen.flip()
 
-		#if (self.scanner=='y') and (not self.stopped):
-		#time.sleep(15)
+		if (self.scanner=='y') and (not self.stopped):
+			time.sleep(self.standard_parameters['timing_end_empty'])
 				
 		self.close()
 	

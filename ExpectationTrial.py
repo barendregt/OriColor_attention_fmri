@@ -69,12 +69,14 @@ class ExpectationTrial(Trial):
 		"""docstring for draw"""
 		if self.phase == 0: # ITIself.parameterDict
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
+			# self.session.fixation_rim.draw()
 			self.session.fixation.draw()
+
+			self.stim.draw(self.phase)
 		
 		# elif self.phase == 1: # Audio cue
 		# 	self.session.fixation_outer_rim.draw()
-		# 	self.session.fixation_rim.draw()
+			# self.session.fixation_rim.draw()
 		# 	self.session.fixation.draw()
 
 		# 	if not self.instruct_sound_played:
@@ -83,7 +85,7 @@ class ExpectationTrial(Trial):
 
 		elif self.phase == 1: # Task cue
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
+			# self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 			
 			self.stim.draw(self.phase)
@@ -91,14 +93,14 @@ class ExpectationTrial(Trial):
 		elif self.phase == 2: # Cue-stim interval
 			
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
+			# self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 		
 			self.stim.draw(self.phase)
 
 		elif self.phase == 3: # Show first stimulus
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()			
+			# self.session.fixation_rim.draw()			
 			self.session.fixation.draw()																												 
 
 			self.stim.draw(self.phase)
@@ -107,7 +109,7 @@ class ExpectationTrial(Trial):
 		elif self.phase == 4: # ISI
 			# pass
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
+			# self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 		
 #			self.stim.draw(self.phase)
@@ -117,7 +119,7 @@ class ExpectationTrial(Trial):
 
 		elif self.phase == 5: # Show second stimulus
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()			
+			# self.session.fixation_rim.draw()			
 			self.session.fixation.draw()
 
 			# Update stimulus parameters
@@ -129,7 +131,7 @@ class ExpectationTrial(Trial):
 			#self.response_time_start = self.session.clock.getTime()
 
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()			
+			# self.session.fixation_rim.draw()			
 			self.session.fixation.draw()		
 
 			self.stim.draw(self.phase)				
