@@ -74,7 +74,17 @@ class ExpectationSession(EyelinkSession):
 			self.prepare_staircases()
 		
 		self.prepare_trials()
+
+	def create_output_file_name(self, data_directory = 'data'):
+		"""create output file"""
+		now = datetime.datetime.now()
+		opfn = now.strftime("%Y-%m-%d_%H.%M.%S")
 		
+		if not os.path.isdir(data_directory):
+			os.mkdir(data_directory)
+			
+		#self.output_file = os.path.join(data_directory, self.subject_initials + '_' + str(self.index_number) + '_' + opfn )
+		self.output_file = os.path.join(data_directory, self.subject_initials + '_' + str(self.index_number) + '_task-' + opfn )		
 
 	def setup_sounds(self):
 		"""initialize pyaudio backend, and create dictionary of sounds."""
@@ -205,7 +215,8 @@ class ExpectationSession(EyelinkSession):
 
 			self.staircases[stimt] = ThreeUpOneDownStaircase(initial_value = self.standard_parameters['quest_initial_stim_values'][stimt], 
 												  			 initial_stepsize=self.standard_parameters['quest_stepsize'][stimt][0],
-															 max_nr_trials = 500)
+												  			 stepsize_multiplication_on_reversal = 0.85,
+															 max_nr_trials = 10000)
 
 	def partial_store(self, tid):
 		data = pd.concat(self.pdOutput)	

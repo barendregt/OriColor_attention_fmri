@@ -5,45 +5,41 @@ import cPickle as pickle
 import glob
 import seaborn as sn
 import pandas as pd
+import sys
+sys.path.append( 'exp_tools' )
+
+from Staircase import ThreeUpOneDownStaircase
+
 
 from IPython import embed as shell
 
 
 def plot_staircases(initials,run_nr):
 
+
 	stairs = ['red','green','ori']
 
 	# Load staircase data
-	data = pd.read_csv('data/' + initials + '_' + str(run_nr) + '_output.csv')
-
-	num_of_staircases = identify_staircases(data)
+	staircases = pickle.load(open('data/' + initials + '_staircase.pickle','rb'))
 
 	# shell()
-	# Compute moving average
-	win_len = 5
-	avg_data = []
-	for ii in range(0,len(data['correct_answer'])-win_len):
-		avg_data.extend([np.mean(data['correct_answer'][ii:ii+win_len])])
+	# Compute average performance over time
+	percent_correct = list()
+	for ii in range(len(staircases)):
+
+		responses = staircases[ii].past_answers
+
+		percent_correct.append(np.cumsum(responses) / np.arange(1,len(responses)+1))
 
 
 	# Plot average resp correct over time
 
 	f = pl.figure()
 
-	pl.plot(avg_data,'k-')
-
-	pl.tight_layout()
+	for s in range(len(stairs)):
+		pl.plot(percent_correct[s],'-')
+	pl.legend(stairs)
 
 	pl.savefig('data/%s_%d_staircase_plot.pdf'%(initials,run_nr))
-
-
-
-
-def identify_staircases(dataset):
-
-	task = dataset['task']
-	base_col = dataset['base_color_a']
-	# base_ori = dataset['base_ori']
-
 
 

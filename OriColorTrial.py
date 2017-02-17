@@ -75,47 +75,47 @@ class OriColorTrial(Trial):
 				elif ev in self.session.response_buttons.keys():
 
 					# Check if the response is within the time window
-					if self.session.clock.getTime() < self.session.response_timing[1]:
+					#if self.session.clock.getTime() < self.session.response_timing[1]:
 						
-						if self.session.response_buttons[ev] == self.session.task_direction:
-							response = 1						
-						else:
-							response = 0
+					if self.session.response_buttons[ev] == self.session.task_direction:
+						response = 1						
+					else:
+						response = 0
 
-						self.session.staircase.answer(response)
+					self.session.staircase.answer(response)
 
-						self.session.task_responded = True
+					self.session.task_responded = True
 
 
-						# first check, do we even need an answer?
-						# if self.phase == 3:
-							# if self.stim.last_sampled_staircase != None:
-							# 	# what value were we presenting at?
-							# 	test_value = self.session.staircases[self.stim.last_sampled_staircase].quantile()
-							# 	if self.session.tasks[self.parameters['task_index']] == 'Color':
-							# 		response = self.session.response_button_signs[ev]*self.stim.present_color_task_sign
-							# 	elif self.session.tasks[self.parameters['task_index']] == 'Speed':
-							# 		response = self.session.response_button_signs[ev]*self.stim.present_speed_task_sign
-							# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix':
-							# 		response = self.session.response_button_signs[ev]*self.stim.present_fix_task_sign
-							# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix_no_stim':
-							# 		response = self.session.response_button_signs[ev]*self.stim.present_fns_task_sign
+					# first check, do we even need an answer?
+					# if self.phase == 3:
+						# if self.stim.last_sampled_staircase != None:
+						# 	# what value were we presenting at?
+						# 	test_value = self.session.staircases[self.stim.last_sampled_staircase].quantile()
+						# 	if self.session.tasks[self.parameters['task_index']] == 'Color':
+						# 		response = self.session.response_button_signs[ev]*self.stim.present_color_task_sign
+						# 	elif self.session.tasks[self.parameters['task_index']] == 'Speed':
+						# 		response = self.session.response_button_signs[ev]*self.stim.present_speed_task_sign
+						# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix':
+						# 		response = self.session.response_button_signs[ev]*self.stim.present_fix_task_sign
+						# 	elif self.session.tasks[self.parameters['task_index']] == 'Fix_no_stim':
+						# 		response = self.session.response_button_signs[ev]*self.stim.present_fns_task_sign
 
-							# 	# update the staircase
-							# 	self.session.staircases[self.stim.last_sampled_staircase].update(test_value,(response+1)/2)
-							# 	# now block the possibility of further updates
-							# 	self.stim.last_sampled_staircase = None
+						# 	# update the staircase
+						# 	self.session.staircases[self.stim.last_sampled_staircase].update(test_value,(response+1)/2)
+						# 	# now block the possibility of further updates
+						# 	self.stim.last_sampled_staircase = None
 
-							# 	if self.session.tasks[self.parameters['task_index']] != 'Fix_no_stim':
-							# 		log_msg = 'staircase %s bin %d updated from %f after response %s at %f'%( self.session.tasks[self.parameters['task_index']], self.stim.eccentricity_bin,test_value, str((response+1)/2), self.session.clock.getTime() )
-							# 	else:
-						log_msg = 'staircase updated from %f to %f after response %s at %f'%( self.session.last_task_val, self.session.staircase.get_intensity(), str(response), self.session.clock.getTime() )
+						# 	if self.session.tasks[self.parameters['task_index']] != 'Fix_no_stim':
+						# 		log_msg = 'staircase %s bin %d updated from %f after response %s at %f'%( self.session.tasks[self.parameters['task_index']], self.stim.eccentricity_bin,test_value, str((response+1)/2), self.session.clock.getTime() )
+						# 	else:
+					log_msg = 'staircase updated from %f to %f after response %s [key %s, dir %d] at %f'%( self.session.task_direction*self.session.last_task_val, self.session.task_direction*self.session.staircase.get_intensity(), str(response), ev,self.session.response_buttons[ev], self.session.clock.getTime() )
 
-						self.events.append( log_msg )
-						print log_msg
+					self.events.append( log_msg )
+					print log_msg
 
-						if self.session.tracker:
-							self.session.tracker.log( log_msg )
+					if self.session.tracker:
+						self.session.tracker.log( log_msg )
 
 
 
@@ -195,8 +195,8 @@ class OriColorTrial(Trial):
 				break
 
 			if self.session.time_for_next_task():
-				self.fix_col_val = self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.05]), 0.95])
-				self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.05]), 0.95])
+				self.fix_col_val = self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
+				self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.01]), 0.99]) 
 			else:
 				self.fix_col_val = 0.0
 

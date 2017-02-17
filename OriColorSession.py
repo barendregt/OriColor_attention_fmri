@@ -169,32 +169,46 @@ class OriColorSession(EyelinkSession):
 		current_time = self.clock.getTime()
 
 		if (not self.pulse_task) and (current_time >= self.next_task_time):
-			self.next_task_time = current_time + (self.standard_parameters['mapper_task_timing'][0] + np.random.random() * self.standard_parameters['mapper_task_timing'][1])
-			self.pulse_task = True
-			self.task_timing = (current_time, current_time + self.standard_parameters['mapper_task_duration'])
-			self.response_timing = (current_time, current_time + self.standard_parameters['mapper_response_duration'])
-			self.task_direction = 2*np.random.random() - 1
-			self.task_responded = False
-		elif self.pulse_task and (current_time > self.task_timing[1]):
-			self.pulse_task = False 
 
+			# Did we get a response to the last pulse?
 			if not self.task_responded: # count not responding as an error
-				self.staircase.answer(0, self.last_task_val)
+				self.staircase.answer(0)#, self.last_task_val)
 
-				log_msg = 'staircase auto-updated from %f to %f after no response at %f'%( self.last_task_val, self.staircase.get_intensity(), self.clock.getTime() )
+				log_msg = 'staircase auto-updated from %f to %f after no response at %f'%( self.last_task_val, self.staircase.get_intensity(), current_time )
 
-				self.last_task_val = min([max([self.session.staircase.get_intensity(), 0.05]), 0.95])
+				self.last_task_val = min([max([self.staircase.get_intensity(), 0.01]), 0.99])
+
+				# self.task_responded = True
 
 				self.events.append( log_msg )
 				print log_msg
 
 				if self.tracker:
-					self.tracker.log( log_msg )
+					self.tracker.log( log_msg )			
 
+			self.next_task_time = current_time + (self.standard_parameters['mapper_task_timing'][0] + np.random.random() * self.standard_parameters['mapper_task_timing'][1])
+			self.pulse_task = True
+			self.task_timing = (current_time, current_time + self.standard_parameters['mapper_task_duration'])
+			# self.response_timing = (current_time, current_time + self.standard_parameters['mapper_response_duration'])
+			self.task_direction = 2*round(np.random.random()) - 1
 			self.task_responded = False
+
+			print 'Running task from %f to %f' % (current_time, self.next_task_time)
+		elif self.pulse_task and (current_time > self.task_timing[1]):
+			self.pulse_task = False 
 
 		return self.pulse_task
 
+	def create_output_file_name(self, data_directory = 'data'):
+		"""create output file"""
+		now = datetime.datetime.now()
+		opfn = now.strftime("%Y-%m-%d_%H.%M.%S")
+		
+		if not os.path.isdir(data_directory):
+			os.mkdir(data_directory)
+			
+		#self.output_file = os.path.join(data_directory, self.subject_initials + '_' + str(self.index_number) + '_' + opfn )
+		self.output_file = os.path.join(data_directory, self.subject_initials + '_' + str(self.index_number) + '_mapper-' + opfn )
 
 	def close(self):
 		super(OriColorSession, self).close()

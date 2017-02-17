@@ -14,7 +14,7 @@ standard_parameters = {
 	## stimulus parameters:calc
 	'stimulus_size': 2.5,#1.5,	# diameter in dva
 
-	'stimulus_positions': ([2.5, 2.5], [2.5, -2.5], [-2.5, -2.5], [-2.5, 2.5],[2.5, 2.5],[-2.5, 2.5],[-2.5, -2.5], [2.5, -2.5]),#(0.0, 0.0),
+	'stimulus_positions': ([1.5, 1.5], [1.5, -1.5], [-1.5, -1.5], [-1.5, 1.5],[1.5, 1.5],[-1.5, 1.5],[-1.5, -1.5], [1.5, -1.5]),#(0.0, 0.0),
 
 	'stimulus_base_spatfreq': 4,#0.04,#0.02,#0.04,
 
@@ -66,7 +66,7 @@ standard_parameters = {
 	'mapper_stimulus_duration':      1.0,		# in TR
 	'mapper_task_duration':			 0.5,    # in TR
 	'mapper_response_duration':		 1.0,	 # in TR
-	'mapper_task_timing':			(1.0, 8.0), # min and max separation of fix task
+	'mapper_task_timing':			(2.0, 8.0), # min and max separation of fix task
 	'mapper_ITI_duration':           2.0,		# in TR
 	'mapper_n_redraws':		 	 	 10.0,		# refresh random phase this many times during presentation	
 	'mapper_mapper_redraws':		20.0	
