@@ -242,6 +242,8 @@ class OriColorSession(EyelinkSession):
 		self.staircase = ThreeUpOneDownStaircase(initial_value = 0.5, 
 												 initial_stepsize= 0.1,
 												 stepsize_multiplication_on_reversal = 0.85,
+												 min_test_val = 0,
+												 max_test_val = 1,
 												 max_nr_trials = 100000)	
 	
 
