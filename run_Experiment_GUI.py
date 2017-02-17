@@ -6,6 +6,7 @@ from IPython import embed
 sys.path.append( 'exp_tools' )
 
 from ExpectationSession import *
+from plot_staircases import plot_staircases
 
 # useTracker = True
 
@@ -22,7 +23,8 @@ def run_first_phase(root,e,inScanner=False,useTracker=False,expTask=1):
    else:
       ts = ExpectationSession( sid, run, inScanner.get(), useTracker.get(), expTask.get() )
       root.quit()
-      ts.run()		
+      ts.run()	
+      plot_staircases(sid, run)	
 	
 fields = 'SubjectID','Run nr'#,'Timestamp'
 

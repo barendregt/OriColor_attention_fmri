@@ -7,6 +7,7 @@ sys.path.append( 'exp_tools' )
 
 from ExpectationSession import *
 
+from plot_staircases import plot_staircases
 # useTracker = True
 
 def main():
@@ -29,8 +30,8 @@ def main():
    ts = ExpectationSession( initials, run_nr, scanner, tracker_on, task )
    ts.run()
 
-   # plot_staircases(initials, run_nr)
-   
+   plot_staircases(initials, run_nr)
+    
 if __name__ == '__main__':
    main()
       

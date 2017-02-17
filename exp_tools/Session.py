@@ -321,6 +321,28 @@ class EyelinkSession(Session):
 			self.tracker.send_command("validation_targets = " % points_string)
 		else:
 			self.tracker.send_command("calibration_type = " + calibration_type)
+
+    def custom_calibration(self,calibration_targets,validation_targets,point_indices,n_points,
+        randomize_order=0,repeat_first_target=1):
+        
+        # send the messages:
+        self.tracker.send_command('calibration_type = HV%d'%n_points  )
+        self.tracker.send_command('generate_default_targets = NO')
+        self.tracker.send_command('randomize_calibration_order %d'%randomize_order)
+        self.tracker.send_command('randomize_validation_order %d'%randomize_order)
+        self.tracker.send_command('cal_repeat_first_target  %d'%repeat_first_target)
+        self.tracker.send_command('val_repeat_first_target  %d'%repeat_first_target)
+
+        if repeat_first_target:
+            n_points+=1
+         
+        self.tracker.send_command('calibration_samples=%d'%n_points)
+        self.tracker.send_command('calibration_sequence=%s'%point_indices)
+        self.tracker.send_command('calibration_targets = %s'%calibration_targets)
+         
+        self.tracker.send_command('validation_samples=%d'%n_points)
+        self.tracker.send_command('validation_sequence=%s'%point_indices)
+        self.tracker.send_command('validation_targets = %s'%validation_targets)			
 			
 	def tracker_setup(self, sensitivity_class = 0, split_screen = False, screen_half = 'L', auto_trigger_calibration = True, calibration_type = 'HV9', sample_rate = 1000):
 		if self.tracker.connected():

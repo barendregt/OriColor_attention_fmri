@@ -18,7 +18,7 @@ sys.path.append( 'exp_tools' )
 
 from Session import *
 from OriColorTrial import *
-from standard_parameters import *
+from constants import *
 from Staircase import ThreeUpOneDownStaircase
 
 # import appnope
