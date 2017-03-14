@@ -134,21 +134,6 @@ class ExpectationSession(EyelinkSession):
 		
 		self.parameter_names = ['base_ori', 'base_r', 'base_g', 'base_b', 'ori_offset', 'color_offset', 'stim_type', 'task', 'x', 'y']
 		
-		
-
-		# if os.path.isfile(os.path.join('data', self.subject_initials + '_' + str(self.index_number) + '_INPROGRESS.pickle')):
-		# 	print 'Found previous data file for this run, loading to continue'
-
-		# 	f = open(os.path.join('data', self.subject_initials + '_' + str(self.index_number) + '_INPROGRESS.pickle'),'rb')
-
-		# 	self.outputDict, self.pdOutput, self.trial_array, self.events, self.trialID, self.fileOperations = cPickle.load(f)
-
-		# else:
-			
-		# 	pfile = open(os.path.join('data', self.subject_initials + '_staircase.txt'),'r')
-		# 	#self.staircases = cPickle.load(pfile)
-		# 	self.staircases = pfile.read().split(";")
-		# 	pfile.close()
 
 		if os.path.isfile(os.path.join('data', self.subject_initials + '_staircase.pickle')):
 			f = open(os.path.join('data', self.subject_initials + '_staircase.pickle'),'rb')
@@ -273,10 +258,6 @@ class ExpectationSession(EyelinkSession):
 				      self.trials[ii]['trial_position_y'] = self.standard_parameters['stimulus_positions'][np.random.randint(low=0,high=4)][1]
 		
 
-		# for tii in range(len(self.trials)):
-		# 	self.trials[tii]['trial_position_x'] = xy_positions[tii][0]
-		# 	self.trials[tii]['trial_position_y'] = xy_positions[tii][1]
-
 
 	def prepare_staircases(self):
 
@@ -285,15 +266,6 @@ class ExpectationSession(EyelinkSession):
 		self.staircases = list([0] * len(self.standard_parameters['quest_initial_stim_values']))
 
 		for stimt in range(0,len(self.standard_parameters['quest_initial_stim_values'])):
-
-			# self.staircases[stimt] = StairHandler(self.standard_parameters['quest_initial_stim_values'][stimt], 
-			# 									  stepSizes=self.standard_parameters['quest_stepsize'][stimt], 
-			# 									  nTrials = 500,
-			# 									  nUp=1, nDown=3, 
-			# 									  # method='2AFC', 
-			# 									  stepType='db', 
-			# 									  minVal=0.0,
-			# 									  maxVal=75)
 
 
 			self.staircases[stimt] = ThreeUpOneDownStaircase(initial_value = self.standard_parameters['quest_initial_stim_values'][stimt], 
@@ -341,15 +313,7 @@ class ExpectationSession(EyelinkSession):
 		f.write(";".join([str(self.staircases[s].get_intensity()) for s in range(len(self.staircases))]))			
 		f.close()
 
-#		
-#		data = pd.concat(self.pdOutput)	
-#		data.to_csv(os.path.join('data', self.output_file + '_output.csv'))
-#		
-		# with open(self.output_file_name, 'w') as f:
-		# 	pickle.dump(self.trial_array, f)
-		# for s in self.staircases.keys():
-		# 	print 'Staircase {}, mean {}, standard deviation {}'.format(s, self.staircases[s].mean(), self.staircases[s].sd())
-		
+
 	
 	def run(self):
 		"""docstring for fname"""
