@@ -297,9 +297,11 @@ class ExpectationSession(EyelinkSession):
 
 
 			self.staircases[stimt] = ThreeUpOneDownStaircase(initial_value = self.standard_parameters['quest_initial_stim_values'][stimt], 
-												  			 initial_stepsize=self.standard_parameters['quest_stepsize'][stimt][0],
-												  			 stepsize_multiplication_on_reversal = 0.85,
-															 max_nr_trials = 10000)
+												  			 initial_stepsize= self.standard_parameters['quest_stepsize'][stimt],
+															 stepsize_multiplication_on_reversal = 0.85,
+															 min_test_val = self.standard_parameters['quest_minmax'][stimt][0],
+															 max_test_val = self.standard_parameters['quest_minmax'][stimt][1],
+															 max_nr_trials = 100000)	
 
 	def partial_store(self, tid):
 		data = pd.concat(self.pdOutput)	

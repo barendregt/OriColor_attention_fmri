@@ -1,9 +1,9 @@
 import numpy as np
 
 
-DISPSIZE = (1920,1080)#(1024,768)#(1280,1024)#(1024,768)#(1680,1050)#(1280,1024) # canvas size
-SCREENSIZE = (70,40)#(48.0,38.0)#(33.8,27.1) # physical screen size in centimeters
-SCREENDIST = 225#60.0#65.0#57.0 # centimeters; distance between screen and participant's eyes
+DISPSIZE = (1024,768)#(1920,1080)#(1280,1024)#(1024,768)#(1680,1050)#(1280,1024) # canvas size
+SCREENSIZE = (33.8,27.1) #(70,40)#(48.0,38.0)# physical screen size in centimeters
+SCREENDIST = 65.0#225#60.0#57.0 # centimeters; distance between screen and participant's eyes
 
 
 screen_num = -1#0#1
@@ -40,15 +40,16 @@ standard_parameters = {
 	'stimulus_base_orientation': (0,90),#(45, 135),
 	'stimulus_base_colors': ((55,80,75), (55,-80,75)),
 
-	'quest_initial_stim_values': (50, 50, 5),
+	'quest_initial_stim_values': (70,70,5,5),# (50, 50, 5),
 
-	'quest_stepsize': (np.r_[np.array([10,5,2,2]), 1*np.ones((1000))],
-		 			   np.r_[np.array([10,5,2,2]), 1*np.ones((1000))],
-		 			   np.r_[np.array([0.5,0.5,0.25,0.25]), 0.25*np.ones((1000))]),
+	'quest_stepsize': [15,15,2,2],
 				 
 	'quest_r_index': (0),#(0,1),
 	'quest_g_index': (1),#(2,3),
-	'quest_o_index': (2),#(4,5),
+	'quest_h_index': (2),#(4,5),
+	'quest_v_index': (3),
+
+	'quest_minmax': [(0,80),(0,80),(0,100),(0,100)],
 	
 
 	'session_types': [0,1,2,3],
@@ -56,8 +57,8 @@ standard_parameters = {
 
 	## timing of the presentation:
 
-	'timing_start_empty': 15,
-	'timing_finish_empty': 15,
+	'timing_start_empty': 0,#15,
+	'timing_finish_empty': 0,#15,
 
 	'timing_stim_1_Duration' : .15, # duration of stimulus presentation, in sec
 	'timing_ISI'             : .03,
@@ -67,8 +68,8 @@ standard_parameters = {
 	'timing_responseDuration' : 1.5,#2.75, # time to respond	
 	'timing_ITI_duration':  (0.5, 1.5),		# in sec
 
-	'response_buttons_orientation': ['b','y'],
-	'response_buttons_color': ['w','e'],
+	'response_buttons_orientation': ['j','l'], #['b','y'],
+	'response_buttons_color': ['s','f'],#['w','e'],
 
 
 	# OriColorMapper stuff

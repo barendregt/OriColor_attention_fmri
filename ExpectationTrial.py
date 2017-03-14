@@ -44,8 +44,10 @@ class ExpectationTrial(Trial):
 			
 		self.trial_color_value = newSample
 
-		# if self.parameters['base_ori'] == 45:
-		self.staircase_ori_index = self.session.standard_parameters['quest_o_index']
+		if self.parameters['base_ori'] == 0:
+			self.staircase_ori_index = self.session.standard_parameters['quest_h_index']
+		else:
+			self.staircase_ori_index = self.session.standard_parameters['quest_v_index']
 		#newSample = self.session.staircases[self.staircase_ori_index].next()
 		newSample = self.session.staircases[self.staircase_ori_index].get_intensity()
 		# else:

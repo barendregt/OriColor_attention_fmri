@@ -32,7 +32,7 @@ class OneUpOneDownStaircase(object):
 		self.min_test_val = min_test_val
 		self.max_test_val = max_test_val
 		
-		self.test_values = self.initial_value # keep a log of test values
+		self.test_values = [self.initial_value] # keep a log of test values
 		self.present_increment_value = initial_stepsize#increment_value
 		
 		# set up filler variables
@@ -58,9 +58,9 @@ class OneUpOneDownStaircase(object):
 	def decrease_difficulty(self):
 
 		if self.max_test_val is not None:
-			self.test_value = min([self.test_value + self.present_increment_value, self.max_test_val])
+			self.test_values.append(min([self.test_values[-1] + self.present_increment_value, self.max_test_val]))
 		else:
-			self.test_value = self.test_value + self.present_increment_value		
+			self.test_values.append(self.test_values[-1] + self.present_increment_value)		
 
 	def answer( self, correct ):
 		continue_after_this_trial = True
