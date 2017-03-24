@@ -89,7 +89,7 @@ class OneUpOneDownStaircase(object):
 class TwoUpOneDownStaircase(OneUpOneDownStaircase):
 	def __init__(self, initial_value, initial_stepsize, nr_reversals = 10, increment_value = None, stepsize_multiplication_on_reversal = 0.75, max_nr_trials = 40, min_test_val = None, max_test_val = None ):
 		super(TwoUpOneDownStaircase, self).__init__(initial_value, initial_stepsize, nr_reversals, increment_value, stepsize_multiplication_on_reversal, max_nr_trials, min_test_val, max_test_val)
-		self.past_answers = [0.5, 0.5, 0.5]
+		self.past_answers = []# [0.5, 0.5, 0.5]
 	
 	def answer( self, correct ):
 		continue_after_this_trial = True

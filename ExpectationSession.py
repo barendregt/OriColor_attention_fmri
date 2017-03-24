@@ -17,7 +17,7 @@ from Session import *
 from ExpectationTrial import *
 from constants import *
 
-from Staircase import ThreeUpOneDownStaircase
+from Staircase import TwoUpOneDownStaircase#ThreeUpOneDownStaircase
 
 class ExpectationSession(EyelinkSession):
 	def __init__(self, subject_initials, index_number,scanner, tracker_on, task):
@@ -268,7 +268,7 @@ class ExpectationSession(EyelinkSession):
 		for stimt in range(0,len(self.standard_parameters['quest_initial_stim_values'])):
 
 
-			self.staircases[stimt] = ThreeUpOneDownStaircase(initial_value = self.standard_parameters['quest_initial_stim_values'][stimt], 
+			self.staircases[stimt] = TwoUpOneDownStaircase(initial_value = self.standard_parameters['quest_initial_stim_values'][stimt], 
 												  			 initial_stepsize= self.standard_parameters['quest_stepsize'][stimt],
 															 stepsize_multiplication_on_reversal = 0.85,
 															 min_test_val = self.standard_parameters['quest_minmax'][stimt][0],
