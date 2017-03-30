@@ -32,45 +32,34 @@ class ExpectationTrial(Trial):
 
 		self.parameters = parameters.copy()
 		# Determine trial direction (1 = more yellow, -1 =f more blue)
-		self.col_trial_direction = 2*round(np.random.rand())-1#np.random.choice([-1,1])	
+		self.col_trial_direction = 2*round(np.random.rand())-1
 
-		#for ii, baseColor in enumerate(self.parameters['base_color_a']):
-		shell()
-		if len(self.parameters['base_color_a']) %2 ==0 :  # even trials use high staircases
-			if self.parameters['base_color_a'] > 0:
-				
-				self.staircase_col_index = self.session.standard_parameters['quest_r_index'][0]
-				#newSample = self.session.staircases[self.staircase_col_index].next()
-				newSample = self.session.staircases[self.staircase_col_index].get_intensity()
-			else:
-				self.staircase_col_index = self.session.standard_parameters['quest_g_index'][0]
-				#newSample = -1*self.session.staircases[self.staircase_col_index].next()
-				newSample = -1*self.session.staircases[self.staircase_col_index].get_intensity()
-		
-		else :  # odd trials use low staircases
-			if self.parameters['base_color_a'] > 0:
 
-				self.staircase_col_index = self.session.standard_parameters['quest_r_index'][1]
-				#newSample = self.session.staircases[self.staircase_col_index].next()
-				newSample = self.session.staircases[self.staircase_col_index].get_intensity()
-			else:
-				self.staircase_col_index = self.session.standard_parameters['quest_g_index'][1]
-				#newSample = -1*self.session.staircases[self.staircase_col_index].next()
-				newSample = -1*self.session.staircases[self.staircase_col_index].get_intensity()
+		if self.parameters['base_color_a'] > 0:
+			self.session.last_used_staircase['red'] = abs(self.session.last_used_staircase['red']-1)
+			self.staircase_col_index = self.session.standard_parameters['quest_r_index'][self.session.last_used_staircase['red']]
+
+			newSample = self.session.staircases[self.staircase_col_index].get_intensity()
+		else:
+			self.session.last_used_staircase['green'] = abs(self.session.last_used_staircase['green']-1)
+			self.staircase_col_index = self.session.standard_parameters['quest_g_index'][self.session.last_used_staircase['green']]
+
+			newSample = -1*self.session.staircases[self.staircase_col_index].get_intensity()
+	
+
 		self.trial_color_value = newSample
 
 
 
 		if self.parameters['base_ori'] == 0:
-			self.staircase_ori_index = self.session.standard_parameters['quest_h_index'][0]
-
+			self.session.last_used_staircase['horizontal'] = abs(self.session.last_used_staircase['horizontal']-1)
+			self.staircase_ori_index = self.session.standard_parameters['quest_h_index'][self.session.last_used_staircase['horizontal']]
 		else:
-			self.staircase_ori_index = self.session.standard_parameters['quest_v_index'][0]
-		#newSample = self.session.staircases[self.staircase_ori_index].next()
+			self.session.last_used_staircase['vertical'] = abs(self.session.last_used_staircase['vertical']-1)
+			self.staircase_ori_index = self.session.standard_parameters['quest_v_index'][self.session.last_used_staircase['vertical']]
+
 		newSample = self.session.staircases[self.staircase_ori_index].get_intensity()
-		# else:
-		# 	self.staircase_ori_index = self.session.standard_parameters['quest_o_index']
-		# 	newSample = -1*self.session.staircases[self.staircase_ori_index].next()
+
 			
 		self.ori_trial_direction = 2*round(np.random.rand())-1		
 
@@ -161,9 +150,11 @@ class ExpectationTrial(Trial):
 			self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 
-			if not self.instruct_sound_played:
-				self.stim.play_cue_sound()
-				self.instruct_sound_played = True
+			self.stim.draw(self.phase)
+
+			# if not self.instruct_sound_played:
+			# 	self.stim.play_cue_sound()
+			# 	self.instruct_sound_played = True
 
 			
 		super(ExpectationTrial, self).draw( )

@@ -148,8 +148,8 @@ class ExpectationStim(object):
 			# if self.printcolor:
 				# print self.stimulus.color
 				# self.printcolor = False
-		# if self.phase >= 6:
-			# self.response_stim.draw()
+		if self.phase >= 6:
+			self.response_stim.draw()
 		# log_msg = 'stimulus draw for phase %f, at %f'%(phase, self.session.clock.getTime())
 		# self.trial.events.append( log_msg )
 		# if self.session.tracker:

@@ -1,4 +1,4 @@
-import sys, datetime
+import sys, datetime, glob
  # from Tkinter import *
 
 from IPython import embed
@@ -30,8 +30,8 @@ def main():
    ts = ExpectationSession( initials, run_nr, scanner, tracker_on, task )
    ts.run()
 
-   data_dir = '/home/xiaomeng/Data/Pre_scan_data/'
-   figure_dir = '/home/xiaomeng/Data/Pre_scan_data/'
+   # data_dir = '/home/xiaomeng/Data/Pre_scan_data/'
+   # figure_dir = '/home/xiaomeng/Data/Pre_scan_data/'
    #figure_dir = '/home/shared/2017/visual/Attention/behaviour/'
    # staircases = pickle.load(open('data/' + initials + '_staircase.pickle','rb'))
    # lab k2d38
@@ -41,9 +41,9 @@ def main():
    # subject_dir= data_dir #os.path.join(data_dir,initials)
    # csv_files = glob.glob(subject_dir+'/*.csv')
 
-   subject_dir= data_dir #os.path.join(data_dir,initials)
-   # csv_files = glob.glob('data'+'/*.csv')
-   csv_files = glob.glob(subject_dir, '/*.csv')
+   # subject_dir= data_dir #os.path.join(data_dir,initials)
+   csv_files = glob.glob('data'+'/*.csv')
+   # csv_files = glob.glob(subject_dir, '/*.csv')
    csv_files.sort()
 
 
