@@ -1,4 +1,4 @@
-import sys, datetime
+import sys, datetime, glob
 # from Tkinter import *
 
 from IPython import embed
@@ -41,7 +41,7 @@ def main():
    # csv_files = glob.glob(subject_dir+'/*.csv')
 
    subject_dir= data_dir #os.path.join(data_dir,initials)
-   csv_files = glob.glob('data'+'/*.csv')
+   csv_files = glob.glob('data'+'/'+initials+'_*.csv')
    csv_files.sort()
 
 

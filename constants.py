@@ -49,6 +49,9 @@ standard_parameters = {
 	'quest_h_index': (2),#(4,5),
 	'quest_v_index': (3),
 
+
+	'training_indices': ((0,1),(2,3),(4,5),(6,7)),#(3),
+
 	'quest_minmax': [(0,80),(0,80),(0,100),(0,100)],
 	
 

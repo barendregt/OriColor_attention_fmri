@@ -135,11 +135,7 @@ class ExpectationSession(EyelinkSession):
 		self.parameter_names = ['base_ori', 'base_r', 'base_g', 'base_b', 'ori_offset', 'color_offset', 'stim_type', 'task', 'x', 'y']
 		
 
-		if os.path.isfile(os.path.join('data', self.subject_initials + '_staircase.pickle')):
-			f = open(os.path.join('data', self.subject_initials + '_staircase.pickle'),'rb')
-			self.staircases = cPickle.load(f)
-		else:
-			self.prepare_staircases()
+		self.prepare_staircases()
 		
 		self.prepare_trials()
 
@@ -318,11 +314,11 @@ class ExpectationSession(EyelinkSession):
 
 		#if self.index_number == 0:
 
-		parsopf = open(os.path.join('data', self.subject_initials + '_staircase.pickle'), 'wb')
+		parsopf = open(os.path.join('data', self.subject_initials + '_training_staircase.pickle'), 'wb')
 
 		cPickle.dump(self.staircases,parsopf)
 
-		f = open(os.path.join('data', self.subject_initials + '_staircase.txt'), 'w')
+		f = open(os.path.join('data', self.subject_initials + '_training_staircase.txt'), 'w')
 		f.write(";".join([str(self.staircases[s].get_intensity()) for s in range(len(self.staircases))]))			
 		f.close()
 

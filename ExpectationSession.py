@@ -17,7 +17,7 @@ from Session import *
 from ExpectationTrial import *
 from constants import *
 
-from Staircase import TwoUpOneDownStaircase#ThreeUpOneDownStaircase
+from Staircase import ThreeUpOneDownStaircase
 
 class ExpectationSession(EyelinkSession):
 	def __init__(self, subject_initials, index_number,scanner, tracker_on, task):
@@ -133,6 +133,16 @@ class ExpectationSession(EyelinkSession):
 		# trials can be set up independently of the staircases that support their parameters
 		
 		self.parameter_names = ['base_ori', 'base_r', 'base_g', 'base_b', 'ori_offset', 'color_offset', 'stim_type', 'task', 'x', 'y']
+
+		if os.path.isfile(os.path.join('data', self.subject_initials + '_training_staircase.pickle')):
+			f = open(os.path.join('data', self.subject_initials + '_training_staircase.pickle'),'rb')
+			training_staircases = cPickle.load(f)
+
+			self.computed_initial_values = [np.mean([training_staircases[a].get_intensity(),training_staircases[b].get_intensity()]) for (a,b) in self.standard_parameters['training_indices']]
+
+		else:
+			print('WARNING: no training staircase found! Please run training first.')
+			self.computed_initial_values = []
 		
 
 		if os.path.isfile(os.path.join('data', self.subject_initials + '_staircase.pickle')):
@@ -268,7 +278,7 @@ class ExpectationSession(EyelinkSession):
 		for stimt in range(0,len(self.standard_parameters['quest_initial_stim_values'])):
 
 
-			self.staircases[stimt] = ThreeUpOneDownStaircase(initial_value = self.standard_parameters['quest_initial_stim_values'][stimt], 
+			self.staircases[stimt] = ThreeUpOneDownStaircase(initial_value = self.computed_initial_values[stimt], 
 												  			 initial_stepsize= self.standard_parameters['quest_stepsize'][stimt],
 															 stepsize_multiplication_on_reversal = 0.85,
 															 min_test_val = self.standard_parameters['quest_minmax'][stimt][0],
