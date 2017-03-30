@@ -30,7 +30,22 @@ def main():
    ts = ExpectationSession( initials, run_nr, scanner, tracker_on, task )
    ts.run()
 
-   plot_staircases(initials, run_nr)
+   data_dir = '/home/xiaomeng/Data/Pre_scan_data/'
+   # figure_dir = '/home/shared/2017/visual/Attention/behaviour/'
+   # staircases = pickle.load(open('data/' + initials + '_staircase.pickle','rb'))
+   # lab k2d38
+   # data_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
+   # figure_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
+
+   # subject_dir= data_dir #os.path.join(data_dir,initials)
+   # csv_files = glob.glob(subject_dir+'/*.csv')
+
+   subject_dir= data_dir #os.path.join(data_dir,initials)
+   csv_files = glob.glob('data'+'/*.csv')
+   csv_files.sort()
+
+
+   plot_staircases(csv_files, initials, run_nr)
     
 if __name__ == '__main__':
    main()

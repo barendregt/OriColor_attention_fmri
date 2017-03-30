@@ -67,7 +67,7 @@ standard_parameters = {
 	'timing_stimcue_interval' : 0.5,
 	'timing_responseDuration' : 1.5,#2.75, # time to respond	
 	'timing_ITI_duration':  (0.5, 1.5),		# in sec
-
+	
 	'response_buttons_orientation': ['j','l'], #['b','y'],
 	'response_buttons_color': ['s','f'],#['w','e'],
 
