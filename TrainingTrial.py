@@ -13,7 +13,7 @@ sys.path.append( 'exp_tools' )
 
 import Quest
 
-from ExpectationStim_training import *
+from TrainingStim import *
 from Trial import *
 
 class ExpectationTrial(Trial):
@@ -147,15 +147,19 @@ class ExpectationTrial(Trial):
 
 		elif self.phase >= 7: # Audio feedback
 			self.session.fixation_outer_rim.draw()
-			self.session.fixation_rim.draw()
+			#self.session.fixation_rim.draw()
 			self.session.fixation.draw()
+
+			if self.parameterDict['correct_answer'] == 1:
+				self.stim.feedbackMessage = 'Y'
+			else:
+				self.stim.feedbackMessage = 'N'
 
 			self.stim.draw(self.phase)
 
 			# if not self.instruct_sound_played:
 			# 	self.stim.play_cue_sound()
 			# 	self.instruct_sound_played = True
-
 			
 		super(ExpectationTrial, self).draw( )
 

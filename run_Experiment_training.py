@@ -5,7 +5,7 @@ from IPython import embed
 
 sys.path.append( 'exp_tools' )
 
-from ExpectationSession_training import *
+from TrainingSession import *
 
 from plot_staircases import plot_staircases
 # useTracker = True

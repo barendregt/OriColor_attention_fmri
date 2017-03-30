@@ -14,7 +14,7 @@ sys.path.append( 'exp_tools' )
 
 # import Quest
 from Session import *
-from ExpectationTrial_training import *
+from TrainingTrial import *
 from constants_training import *
 
 from Staircase import ThreeUpOneDownStaircase
@@ -200,17 +200,6 @@ class ExpectationSession(EyelinkSession):
 			self.standard_parameters['timing_responseDuration'], # wait for response			
 			self.standard_parameters['timing_AudioFeedback']    # present AudioFeedbacj
 			])	# ITI
-
-		# self.phase_durations = np.array([
-		# 	self.standard_parameters['timing_ITI_duration'], 	# inter trial interval
-		# 	# self.standard_parameters['timing_cue_duration'],	# present first cue (audio)
-		# 	self.standard_parameters['timing_cue_duration'],	# present second cue (task)
-		# 	self.standard_parameters['timing_stimcue_interval'],# wait before presenting stimulus
-		# 	self.standard_parameters['timing_stim_1_Duration'], # present first stimulus
-		# 	self.standard_parameters['timing_ISI'], 			# inter stimulus interval
-		# 	self.standard_parameters['timing_stim_2_Duration'], # present second stimulus
-		# 	self.standard_parameters['timing_responseDuration'] # wait for response			
-		# 	])	# ITI
 
 		## TRIAL DESIGN: 
 		#stim_types = np.vstack([[(a,b) for a in self.standard_parameters['session_types']] for b in self.standard_parameters['tasks']])			

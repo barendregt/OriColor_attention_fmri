@@ -100,6 +100,10 @@ class ExpectationStim(object):
 		#self.pointer = visual.Line(self.screen, start = (np.sign(self.trial_settings['trial_position_x']) * 0.25 * self.session.pixels_per_degree, np.sign(self.trial_settings['trial_position_y']) * 0.25 * self.session.pixels_per_degree), end = (self.session.pixels_per_degree*self.trial_settings['trial_position_x']/3.0, self.session.pixels_per_degree*self.trial_settings['trial_position_y']/3.0))
 		self.pointer = visual.Rect(self.screen, lineColor = (0,0,0), fillColor = (0,0,0), width = 0.5 * self.session.pixels_per_degree, height = 0.5 * self.session.pixels_per_degree, pos = (np.sign(self.trial_settings['trial_position_x']) * 0.25 * self.session.pixels_per_degree, np.sign(self.trial_settings['trial_position_y']) * 0.25 * self.session.pixels_per_degree))
 
+		self.feedbackMessage = '.'
+		self.feedback_visual = visual.TextStim(self.screen, text = self.feedbackMessage, color = 'black', bold = True, pos = (0.0,0.0), height = 0.4 * self.session.pixels_per_degree)	
+		# feedback method in Trial, exp_tool
+
 	def play_cue_sound(self):
 		
 		# assuming 44100 Hz, mono channel np.int16 format for the sound
@@ -148,8 +152,13 @@ class ExpectationStim(object):
 			# if self.printcolor:
 				# print self.stimulus.color
 				# self.printcolor = False
-		if self.phase >= 6:
+		if self.phase == 6:
 			self.response_stim.draw()
+
+		if self.phase >= 7:
+			self.feedback_visual.draw()
+			
+
 		# log_msg = 'stimulus draw for phase %f, at %f'%(phase, self.session.clock.getTime())
 		# self.trial.events.append( log_msg )
 		# if self.session.tracker:
