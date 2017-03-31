@@ -156,10 +156,12 @@ class ExpectationStim(object):
 			self.response_stim.draw()
 
 		if self.phase >= 7:
-			if self.trial.parameterDict['correct_answer'] == 1:
+			if 'correct_answer' not in self.trial.parameterDict:
+				self.feedback_visual.text = 'M'
+			elif self.trial.parameterDict['correct_answer'] == 1:
 				#self.stim.feedbackMessage = 'Y'
 				self.feedback_visual.text = 'Y'
-			else:
+			elif self.trial.parameterDict['correct_answer'] == 0:
 				#self.stim.feedbackMessage = 'N'
 				self.feedback_visual.text = 'N'
 			
