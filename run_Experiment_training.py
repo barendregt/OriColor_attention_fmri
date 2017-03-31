@@ -35,8 +35,8 @@ def main():
    #figure_dir = '/home/shared/2017/visual/Attention/behaviour/'
    # staircases = pickle.load(open('data/' + initials + '_staircase.pickle','rb'))
    # lab k2d38
-   # data_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
-   # figure_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
+   data_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
+   figure_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
 
    # subject_dir= data_dir #os.path.join(data_dir,initials)
    # csv_files = glob.glob(subject_dir+'/*.csv')

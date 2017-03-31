@@ -156,8 +156,14 @@ class ExpectationStim(object):
 			self.response_stim.draw()
 
 		if self.phase >= 7:
-			self.feedback_visual.draw()
+			if self.trial.parameterDict['correct_answer'] == 1:
+				#self.stim.feedbackMessage = 'Y'
+				self.feedback_visual.text = 'Y'
+			else:
+				#self.stim.feedbackMessage = 'N'
+				self.feedback_visual.text = 'N'
 			
+			self.feedback_visual.draw()
 
 		# log_msg = 'stimulus draw for phase %f, at %f'%(phase, self.session.clock.getTime())
 		# self.trial.events.append( log_msg )

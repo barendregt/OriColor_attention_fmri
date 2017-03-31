@@ -14,12 +14,12 @@ from IPython import embed as shell
 # figure_dir = '/home/shared/2017/visual/Attention/behaviour/'
 
 # lab k2d38
-# data_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
-# figure_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
+data_dir = 'C:\Userdata\Martijn\OriColor_atention_fmri\data'
+figure_dir = 'C:\Userdata\Martijn\OriColor_atention_fmridata'
 
-# lab k2d38
-# data_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
-# figure_dir = 'C:/Userdata/Martijn/OriColor_atention_fmri/data'
+#initials = csv_files[0].split('_')[0]
+#run_nr = csv_files[0].split('_')[1]
+#from run_Experiment_training import main
 
 def load_beh_data(initials, csv_files):
 	'''extend data over runs, print RT, accuracy for each run'''
@@ -69,7 +69,7 @@ def load_beh_data(initials, csv_files):
 
 def create_masks():
 	'''create masks'''
-	reaction_time, all_responses, task, button, position_x, position_y, trial_color, trial_ori, trial_stimulus, response, trial_direction = load_beh_data(csv_files) #  all the data
+	reaction_time, all_responses, task, button, position_x, position_y, trial_color, trial_ori, trial_stimulus, response, trial_direction = load_beh_data(initials, csv_files) #  all the data
 
 	
 	color_task_mask = np.array(np.array(task)==1)
@@ -108,7 +108,7 @@ def create_masks():
 def plot_staircases (csv_files, initials, run_nr):
 	'''plot stairecase for each participant'''
 
-	all_responses = load_beh_data(csv_files)[1] # index starts from 0
+	all_responses = load_beh_data(initials, csv_files)[1] # index starts from 0
 	responses_mask = create_masks()[8] # changes! if add seperatable analysis
 	correct_answer_mask = create_masks()[9]
 	color_task_mask = create_masks()[0]
@@ -153,8 +153,8 @@ def plot_staircases (csv_files, initials, run_nr):
 	ver_task_accuracy = ver_task_cum_responses/ver_task_n_responses
 
 	# staircase
-	trial_color = load_beh_data(csv_files)[6]
-	trial_ori = load_beh_data(csv_files)[7]
+	trial_color = load_beh_data(initials, csv_files)[6]
+	trial_ori = load_beh_data(initials, csv_files)[7]
 
 	red_staircase = np.abs(trial_color[responses_mask * red_task_mask])
 	gre_staircase = np.abs(trial_color[responses_mask * gre_task_mask])
@@ -215,7 +215,7 @@ def plot_staircases (csv_files, initials, run_nr):
 	s5.set_title('staircase orientation', fontsize = 20)
 
 
-	pl.savefig( figure_dir +'data/lab_%s_%d_color_ori_staircase_plot.jpg'%(initials,run_nr))
+	pl.savefig( figure_dir +'lab_%s_%d_color_ori_staircase_plot.jpg'%(initials,run_nr))
 	# pl.savefig('data/%s_%d_staircase_plot.pdf'%(initials,run_nr))
 
 

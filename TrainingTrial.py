@@ -149,12 +149,7 @@ class ExpectationTrial(Trial):
 			self.session.fixation_outer_rim.draw()
 			#self.session.fixation_rim.draw()
 			self.session.fixation.draw()
-
-			if self.parameterDict['correct_answer'] == 1:
-				self.stim.feedbackMessage = 'Y'
-			else:
-				self.stim.feedbackMessage = 'N'
-
+			
 			self.stim.draw(self.phase)
 
 			# if not self.instruct_sound_played:
