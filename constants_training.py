@@ -43,7 +43,8 @@ standard_parameters = {
 	'quest_initial_stim_values': (70,20,70,20, 5,1,5,1),#(70,70,5,5),# (50, 50, 5),
 
 	'quest_stepsize': [15,15,15,15, .5,.5,.5,.5], #[15,15,2,2]
-				 
+
+	'training_indices': ((0,1),(2,3),(4,5),(6,7)),#(3),
 	'quest_r_index': (0,1),#(0),#(0,1),
 	'quest_g_index': (2,3),#(1),#(2,3),
 	'quest_h_index': (4,5),#(2),#(4,5),

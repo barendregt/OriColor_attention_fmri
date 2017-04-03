@@ -43,9 +43,9 @@ def main():
    #csv_files = glob.glob(data_dir + '\*.csv')
    csv_files.sort()
 
-
    #plot_staircases(csv_files, initials, run_nr)
-    
+   plot_staircases(initials,run_nr) 
+   
 if __name__ == '__main__':
    main()
       
