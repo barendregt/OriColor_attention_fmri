@@ -152,20 +152,18 @@ class ExpectationStim(object):
 			# if self.printcolor:
 				# print self.stimulus.color
 				# self.printcolor = False
-		if self.phase == 6:
-			self.response_stim.draw()
+		#if self.phase == 6:
+		#	self.response_stim.draw()
 
-		if self.phase >= 7:
-			if 'correct_answer' not in self.trial.parameterDict:
-				self.feedback_visual.text = 'M'
-			elif self.trial.parameterDict['correct_answer'] == 1:
-				#self.stim.feedbackMessage = 'Y'
-				self.feedback_visual.text = 'Y'
-			elif self.trial.parameterDict['correct_answer'] == 0:
-				#self.stim.feedbackMessage = 'N'
-				self.feedback_visual.text = 'N'
+		#if self.phase >= 7:
+		#	if 'correct_answer' not in self.trial.parameterDict:
+		#		self.feedback_visual.text = 'M'
+		#	elif self.trial.parameterDict['correct_answer'] == 1:
+		#		self.feedback_visual.text = 'Y'
+		#	elif self.trial.parameterDict['correct_answer'] == 0:
+		#		self.feedback_visual.text = 'N'
 			
-			self.feedback_visual.draw()
+		#	self.feedback_visual.draw()
 
 		# log_msg = 'stimulus draw for phase %f, at %f'%(phase, self.session.clock.getTime())
 		# self.trial.events.append( log_msg )

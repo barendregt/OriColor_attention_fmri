@@ -27,7 +27,7 @@ import pygame
 from pygame.locals import *
 from scipy.io import wavfile
 
-#import pyaudio, wave
+import pyaudio, wave
 
 # from pylink import *
 

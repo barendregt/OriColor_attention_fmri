@@ -138,6 +138,8 @@ class ExpectationSession(EyelinkSession):
 		self.prepare_staircases()
 		
 		self.prepare_trials()
+		
+		self.setup_sounds()
 
 	def create_output_file_name(self, data_directory = 'data'):
 		"""create output file"""
@@ -183,31 +185,32 @@ class ExpectationSession(EyelinkSession):
 			self.read_sound_file(file_name = self.sound_files[sf], sound_name = sf)
 		# print self.sounds
 	
-	def play_sound(self):
+	def play_sound(self, sound_key = ''):
 		
 		## assuming 44100 Hz, mono channel np.int16 format for the sounds
 		#stream_data = self.parameters['sounds']['error']
-		stream_data = self.sounds[self.sound_name] #self.cue_sound
+		if len(sound_key)>0:
+			stream_data = self.sounds[sound_key] #self.cue_sound
 
-		self.frame_counter = 0
-		def callback(in_data, frame_count, time_info, status):
- 			data = stream_data[self.frame_counter:self.frame_counter+frame_count]
- 			self.frame_counter += frame_count
- 			return (data, pyaudio.paContinue)
+			self.frame_counter = 0
+			def callback(in_data, frame_count, time_info, status):
+				data = stream_data[self.frame_counter:self.frame_counter+frame_count]
+				self.frame_counter += frame_count
+				return (data, pyaudio.paContinue)
 
- 		shell()
+			#shell()
 
-		# open stream using callback (3)
-		stream = self.pyaudio.open(format=pyaudio.paInt16,
-						channels=1,
-						rate=44100,
-						output=True,
-						stream_callback=callback)
+			# open stream using callback (3)
+			stream = self.pyaudio.open(format=pyaudio.paInt16,
+							channels=1,
+							rate=44100,
+							output=True,
+							stream_callback=callback)
 
-		stream.start_stream()
-		# stream.write(stream_data)	
-		#stream_data = None
-		del stream
+			stream.start_stream()
+			# stream.write(stream_data)	
+			#stream_data = None
+			del stream
 
 	
 	def prepare_trials(self):
