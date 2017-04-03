@@ -150,13 +150,38 @@ class ExpectationTrial(Trial):
 			#self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 			
-			self.stim.draw(self.phase)
+			#self.stim.draw(self.phase)
 
-			# if not self.instruct_sound_played:
-			# 	self.stim.play_cue_sound()
-			# 	self.instruct_sound_played = True
+			answer = self.trial.parameterDict 
+			if not self.instruct_sound_played:
+				self.feedback(answer)
+			 	self.instruct_sound_played = True
 			
 		super(ExpectationTrial, self).draw( )
+
+	def feedback(self, answer): #, setting):
+
+		#super(ExpectationTrial, self).feedback()
+		
+		# if setting != 0.0:
+		# 	if cmp(setting, 0) == answer:
+		# 		self.session.play_sound( sound_index = 0 )
+		# 	else:
+		# 		self.session.play_sound( sound_index = 1 )
+		
+		if 'correct_answer' not in answer:
+			#self.feedback_visual.text = 'M'
+			self.session.play_sound( sound_index = 1 )
+		elif self.trial.parameterDict['correct_answer'] == 1:
+			self.session.play_sound( sound_index = 0 )
+			#self.feedback_visual.text = 'Y'
+
+		elif self.trial.parameterDict['correct_answer'] == 0:
+			self.session.play_sound( sound_index = 1 )
+			#self.feedback_visual.text = 'N'
+		
+		#self.feedback_visual.draw()
+
 
 	def event(self):
 		for ev in event.getKeys():

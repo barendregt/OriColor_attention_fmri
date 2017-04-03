@@ -10,19 +10,20 @@ sys.path.append( 'exp_tools' )
 from Staircase import ThreeUpOneDownStaircase
 from IPython import embed as shell
    
-# data_dir = '/home/xiaomeng/Data/Pre_scan_data/'
-# figure_dir = '/home/shared/2017/visual/Attention/behaviour/'
+data_dir = '/home/xiaomeng/Data/Pre_scan_data/'
+figure_dir = '/home/shared/2017/visual/Attention/behaviour/'
 
 # lab k2d38
 #data_dir = 'C:\Userdata\Martijn\OriColor_atention_fmri\data'
 #figure_dir = 'C:\Userdata\Martijn\OriColor_atention_fmri\data'
 
-#csv_files = glob.glob(data_dir+'\*.csv')
-csv_files = glob.glob('data'+'\*.csv')
-# csv_files = glob.glob(subject_dir, '/*.csv')
+csv_files = glob.glob(data_dir+'/*.csv')
+# csv_files = glob.glob('data'+'\*.csv')
+
 csv_files.sort()
-#initials = csv_files[0].split('_')[0]
-#run_nr = csv_files[0].split('_')[1]
+
+initials = "xy" #csv_files[0].split('_')[0]
+run_nr = 1 #csv_files[0].split('_')[1]
 #from run_Experiment_training import main
 
 #shell()
@@ -218,12 +219,13 @@ def plot_staircases (csv_files, initials, run_nr):
 	s5.set_title('staircase orientation', fontsize = 20)
 
 
-	pl.savefig( 'data\lab_%s_%d_color_ori_staircase_plot.jpg'%(initials,run_nr))
-	#pl.savefig( figure_dir +'\lab_%s_%d_color_ori_staircase_plot.jpg'%(initials,run_nr))
+	# pl.savefig( 'data\lab_%s_%d_color_ori_staircase_plot.jpg'%(initials,run_nr))
+	pl.savefig( figure_dir +'\lab_%s_%d_color_ori_staircase_plot.jpg'%(initials,run_nr))
+	
 	# pl.savefig('data/%s_%d_staircase_plot.pdf'%(initials,run_nr))
 
 
-
+plot_staircases(csv_files, initials, run_nr)
 
 
 

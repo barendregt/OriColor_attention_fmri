@@ -154,37 +154,61 @@ class ExpectationSession(EyelinkSession):
 		"""initialize pyaudio backend, and create dictionary of sounds."""
 		self.pyaudio = pyaudio.PyAudio()
 
-		task_sounds = [['lowToneSingle.wav','lowToneDouble.wav','highToneSingle.wav','highToneDouble.wav'],
-				   ['highToneSingle.wav','highToneDouble.wav','lowToneSingle.wav','lowToneDouble.wav'],
-				   ['lowToneSingle.wav','highToneSingle.wav','lowToneDouble.wav','highToneDouble.wav'],
-				   ['lowToneDouble.wav','highToneDouble.wav','lowToneSingle.wav','highToneSingle.wav'],
-				   ['lowToneDouble.wav','lowToneSingle.wav','highToneDouble.wav','highToneSingle.wav'],
-				   ['highToneDouble.wav','highToneSingle.wav','lowToneDouble.wav','lowToneSingle.wav'],
-				   ['highToneSingle.wav','lowToneSingle.wav','highToneDouble.wav','lowToneDouble.wav'],
-				   ['highToneDouble.wav','lowToneDouble.wav','highToneSingle.wav','lowToneSingle.wav']					   
-					  ]
+		# task_sounds = [['lowToneSingle.wav','lowToneDouble.wav','highToneSingle.wav','highToneDouble.wav'],
+		# 		   ['highToneSingle.wav','highToneDouble.wav','lowToneSingle.wav','lowToneDouble.wav'],
+		# 		   ['lowToneSingle.wav','highToneSingle.wav','lowToneDouble.wav','highToneDouble.wav'],
+		# 		   ['lowToneDouble.wav','highToneDouble.wav','lowToneSingle.wav','highToneSingle.wav'],
+		# 		   ['lowToneDouble.wav','lowToneSingle.wav','highToneDouble.wav','highToneSingle.wav'],
+		# 		   ['highToneDouble.wav','highToneSingle.wav','lowToneDouble.wav','lowToneSingle.wav'],
+		# 		   ['highToneSingle.wav','lowToneSingle.wav','highToneDouble.wav','lowToneDouble.wav'],
+		# 		   ['highToneDouble.wav','lowToneDouble.wav','highToneSingle.wav','lowToneSingle.wav']					   
+		# 			  ]
 
-		if not os.path.isfile(os.path.join('data', self.subject_initials + '_soundmap.txt')):
-			f = open(os.path.join('data', self.subject_initials + '_soundmap.txt'),'w')			
+		# if not os.path.isfile(os.path.join('data', self.subject_initials + '_soundmap.txt')):
+		# 	f = open(os.path.join('data', self.subject_initials + '_soundmap.txt'),'w')			
 
-			f.write(','.join(task_sounds[np.random.randint(len(task_sounds))]))
-			f.close()
+		# 	f.write(','.join(task_sounds[np.random.randint(len(task_sounds))]))
+		# 	f.close()
 
-		f = open(os.path.join('data', self.subject_initials + '_soundmap.txt'),'r')
+		# f = open(os.path.join('data', self.subject_initials + '_soundmap.txt'),'r')
 
-		sub_task_sounds = f.read().split(",")
+		# sub_task_sounds = f.read().split(",")
 
 		self.sound_files = {
-						   'red45' : 'sounds/' + sub_task_sounds[0],
-						   'red135' : 'sounds/' + sub_task_sounds[1],
-						   'green45' : 'sounds/' + sub_task_sounds[2],
-						   'green135' : 'sounds/' + sub_task_sounds[3]
-						   }
+						   'correct' : 'sounds/correct.wav',
+						   'incorrect' : 'sounds/incorrect.wav',
+							}
 		self.sounds = {}
 		for sf in self.sound_files:
 			self.read_sound_file(file_name = self.sound_files[sf], sound_name = sf)
 		# print self.sounds
 	
+	def play_sound(self):
+		
+		## assuming 44100 Hz, mono channel np.int16 format for the sounds
+		#stream_data = self.parameters['sounds']['error']
+		stream_data = self.sounds[self.sound_name] #self.cue_sound
+
+		self.frame_counter = 0
+		def callback(in_data, frame_count, time_info, status):
+ 			data = stream_data[self.frame_counter:self.frame_counter+frame_count]
+ 			self.frame_counter += frame_count
+ 			return (data, pyaudio.paContinue)
+
+ 		shell()
+
+		# open stream using callback (3)
+		stream = self.pyaudio.open(format=pyaudio.paInt16,
+						channels=1,
+						rate=44100,
+						output=True,
+						stream_callback=callback)
+
+		stream.start_stream()
+		# stream.write(stream_data)	
+		#stream_data = None
+		del stream
+
 	
 	def prepare_trials(self):
 		"""docstring for prepare_trials(self):"""
