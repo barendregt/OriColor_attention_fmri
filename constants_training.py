@@ -40,7 +40,7 @@ standard_parameters = {
 	'stimulus_base_orientation': (0,90),#(45, 135),
 	'stimulus_base_colors': ((55,80,75), (55,-80,75)),
 
-	'quest_initial_stim_values': (70,20,70,20, 5,1,5,1),#(70,70,5,5),# (50, 50, 5),
+	'quest_initial_stim_values': (50,15,50,15, 2,.1, 2, .1),#(70,70,5,5),# (50, 50, 5),
 
 	'quest_stepsize': [15,15,15,15, .5,.5,.5,.5], #[15,15,2,2]
 
@@ -67,7 +67,7 @@ standard_parameters = {
 	'timing_cue_duration'    : 0.3,	# Duration for each cue separately
 	'timing_stimcue_interval' : 0.3,
 	'timing_responseDuration' : 1.5,#2.75, # time to respond	
-	'timing_ITI_duration':  (0.17,0.17),		# in sec
+	'timing_ITI_duration':  0.17,		# in sec
 	'timing_AudioFeedback': 0.4, # duration of Audio feedback, in sec
 
 	'response_buttons_orientation': ['j','l'], #['b','y'],

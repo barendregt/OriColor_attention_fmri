@@ -135,7 +135,12 @@ class ExpectationSession(EyelinkSession):
 		self.parameter_names = ['base_ori', 'base_r', 'base_g', 'base_b', 'ori_offset', 'color_offset', 'stim_type', 'task', 'x', 'y']
 		
 
-		self.prepare_staircases()
+		if os.path.isfile(os.path.join('data', self.subject_initials + '_training_staircase.pickle')):
+			f = open(os.path.join('data', self.subject_initials + '_training_staircase.pickle'),'rb')
+			self.staircases = cPickle.load(f)
+		else:
+
+			self.prepare_staircases()
 		
 		self.prepare_trials()
 		

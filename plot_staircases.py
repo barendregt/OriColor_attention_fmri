@@ -1,3 +1,5 @@
+from __future__ import division
+
 from matplotlib import pyplot as pl 
 import numpy as np 
 import cPickle as pickle
@@ -14,8 +16,8 @@ from IPython import embed as shell
 #figure_dir = '/home/shared/2017/visual/Attention/behaviour/'
 #csv_files = glob.glob(data_dir+'/*.csv')
 
-#initials = "xy" #csv_files[0].split('_')[0]
-#run_nr = 1 #csv_files[0].split('_')[1]
+initials = "tt" #csv_files[0].split('_')[0]
+run_nr = 0 #csv_files[0].split('_')[1]
 
 # lab k2d38
 csv_files = glob.glob('data'+'\*.csv')
@@ -26,7 +28,9 @@ def plot_staircases(initials,run_nr):
  	stairs = ['red','green','horizontal', 'vertical']
 
  	# Load staircase data
+ 	# lab k2d38
  	staircases = pickle.load(open('data/' + initials + '_training_staircase.pickle','rb'))
+ 	#staircases = pickle.load(open('data\' + initials + '_training_staircase.pickle','rb'))
 
  	# Compute average performance over time
  	percent_correct = list()
@@ -43,7 +47,7 @@ def plot_staircases(initials,run_nr):
 		
  		percent_correct.append(np.cumsum(np.array(responses)) / np.arange(1,len(responses)+1))
 	
-	shell()	
+	# shell()	
  	# Plot average resp correct over time
 
 # 	f = pl.figure()
@@ -53,7 +57,7 @@ def plot_staircases(initials,run_nr):
 
 	f = pl.figure(figsize = (25,15))
 	training_indices =((0,1),(2,3),(4,5),(6,7))
-	shell()
+	# shell()
 	for i in range(len(training_indices)):
 		s = f.add_subplot(2,4,i+1)
 		pl.plot(percent_correct[training_indices[i][0]],'-')
@@ -68,5 +72,9 @@ def plot_staircases(initials,run_nr):
 		s1.set_title('staircase_' + stairs[i], fontsize = 20)
 	
  	pl.savefig('data/%s_%d_staircase_plot.pdf'%(initials,run_nr))
+
+
+
+plot_staircases(initials, run_nr)
 
 
