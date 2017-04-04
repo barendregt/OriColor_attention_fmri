@@ -22,7 +22,7 @@ standard_parameters = {
 	'TR':               	 0.945,		# VERY IMPORTANT TO FILL IN!! (in secs)
 	# 'number_of_quest_trials':  120,		# this needs to divide into 8
 	# 'number_of_trials':       400,		# this needs to divide into 8
-	'ntrials_per_stim':		 24,#100,   # this * 4 will be the total number of trials
+	'ntrials_per_stim':		 50,#100,   # this * 4 will be the total number of trials
 	'mapper_ntrials':		      100,# 168,
 	'mapper_max_index': 63,
 
@@ -67,8 +67,8 @@ standard_parameters = {
 	'timing_cue_duration'    : 0.3,	# Duration for each cue separately
 	'timing_stimcue_interval' : 0.3,
 	'timing_responseDuration' : 1.5,#2.75, # time to respond	
-	'timing_ITI_duration':  (0.5,0.6),		# in sec
-	'timing_AudioFeedback': 0.3, # duration of Audio feedback, in sec
+	'timing_ITI_duration':  (0.17,0.17),		# in sec
+	'timing_AudioFeedback': 0.4, # duration of Audio feedback, in sec
 
 	'response_buttons_orientation': ['j','l'], #['b','y'],
 	'response_buttons_color': ['s','f'],#['w','e'],

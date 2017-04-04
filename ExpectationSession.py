@@ -133,22 +133,23 @@ class ExpectationSession(EyelinkSession):
 		# trials can be set up independently of the staircases that support their parameters
 		
 		self.parameter_names = ['base_ori', 'base_r', 'base_g', 'base_b', 'ori_offset', 'color_offset', 'stim_type', 'task', 'x', 'y']
-
-		if os.path.isfile(os.path.join('data', self.subject_initials + '_training_staircase.pickle')):
-			f = open(os.path.join('data', self.subject_initials + '_training_staircase.pickle'),'rb')
-			training_staircases = cPickle.load(f)
-
-			self.computed_initial_values = [np.mean([training_staircases[a].get_intensity(),training_staircases[b].get_intensity()]) for (a,b) in self.standard_parameters['training_indices']]
-
-		else:
-			print('WARNING: no training staircase found! Please run training first.')
-			self.computed_initial_values = []
 		
 
 		if os.path.isfile(os.path.join('data', self.subject_initials + '_staircase.pickle')):
 			f = open(os.path.join('data', self.subject_initials + '_staircase.pickle'),'rb')
 			self.staircases = cPickle.load(f)
 		else:
+
+			if os.path.isfile(os.path.join('data', self.subject_initials + '_training_staircase.pickle')):
+				f = open(os.path.join('data', self.subject_initials + '_training_staircase.pickle'),'rb')
+				training_staircases = cPickle.load(f)
+
+				self.computed_initial_values = [np.mean([training_staircases[a].get_intensity(),training_staircases[b].get_intensity()]) for (a,b) in self.standard_parameters['training_indices']]
+
+			else:
+				print('WARNING: no training staircase found! Please run training first.')
+				self.computed_initial_values = []
+
 			self.prepare_staircases()
 		
 		self.prepare_trials()

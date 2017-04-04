@@ -36,13 +36,14 @@ def plot_staircases(initials,run_nr):
 	
  	for ii in range(len(staircases)):
 
- 		responses.append(staircases[ii].past_answers)
+ 		responses = staircases[ii].past_answers
 		#n_responses.append()
 		
 		stair_values.append(staircases[ii].test_values)
-		shell()
- 		percent_correct.append(np.cumsum(np.array(responses)) / np.arange(1,len(responses)+1))
 		
+ 		percent_correct.append(np.cumsum(np.array(responses)) / np.arange(1,len(responses)+1))
+	
+	shell()	
  	# Plot average resp correct over time
 
 # 	f = pl.figure()
