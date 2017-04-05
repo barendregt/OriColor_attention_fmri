@@ -134,12 +134,10 @@ class ExpectationSession(EyelinkSession):
 		
 		self.parameter_names = ['base_ori', 'base_r', 'base_g', 'base_b', 'ori_offset', 'color_offset', 'stim_type', 'task', 'x', 'y']
 		
-
 		if os.path.isfile(os.path.join('data', self.subject_initials + '_training_staircase.pickle')):
 			f = open(os.path.join('data', self.subject_initials + '_training_staircase.pickle'),'rb')
 			self.staircases = cPickle.load(f)
 		else:
-
 			self.prepare_staircases()
 		
 		self.prepare_trials()
@@ -405,7 +403,7 @@ class ExpectationSession(EyelinkSession):
 			# Randomly sample ITI and response duration for this trial (will stepsize TR/2)
 			these_phase_durations = self.phase_durations.copy()
 
-			these_phase_durations[0] = np.random.choice(np.arange(these_phase_durations[0][0], these_phase_durations[0][1], self.standard_parameters['TR']/2))#these_phase_durations[0][0] + np.random.rand()*these_phase_durations[0][1]			
+			#these_phase_durations[0] = np.random.choice(np.arange(these_phase_durations[0][0], these_phase_durations[0][1], self.standard_parameters['TR']/2))#these_phase_durations[0][0] + np.random.rand()*these_phase_durations[0][1]			
 			# these_phase_durations[-1] = np.random.choice(np.arange(these_phase_durations[-1][0], these_phase_durations[-1][1], self.standard_parameters['TR']/2))
 
 			# self.trials(self.trialID).run(ID = self.trialID)

@@ -386,7 +386,7 @@ class ExpectationSession(EyelinkSession):
 
 			# Randomly sample ITI and response duration for this trial (will stepsize TR/2)
 			these_phase_durations = self.phase_durations.copy()
-			# these_phase_durations[0] = np.random.choice(np.arange(these_phase_durations[0][0], these_phase_durations[0][1], self.standard_parameters['TR']/2))#these_phase_durations[0][0] + np.random.rand()*these_phase_durations[0][1]			
+			these_phase_durations[0] = np.random.choice(np.arange(these_phase_durations[0][0], these_phase_durations[0][1], self.standard_parameters['TR']/2))#these_phase_durations[0][0] + np.random.rand()*these_phase_durations[0][1]			
 			# these_phase_durations[-1] = np.random.choice(np.arange(these_phase_durations[-1][0], these_phase_durations[-1][1], self.standard_parameters['TR']/2))
 
 			# self.trials(self.trialID).run(ID = self.trialID)

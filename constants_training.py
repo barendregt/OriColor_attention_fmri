@@ -40,7 +40,7 @@ standard_parameters = {
 	'stimulus_base_orientation': (0,90),#(45, 135),
 	'stimulus_base_colors': ((55,80,75), (55,-80,75)),
 
-	'quest_initial_stim_values': (50,15,50,15, 2,.1, 2, .1),#(70,70,5,5),# (50, 50, 5),
+	'quest_initial_stim_values': (50,5,50,5, 2,0.1,2,0.1),#(70,70,5,5),# (50, 50, 5),
 
 	'quest_stepsize': [15,15,15,15, .5,.5,.5,.5], #[15,15,2,2]
 
