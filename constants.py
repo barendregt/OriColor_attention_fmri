@@ -1,9 +1,9 @@
 import numpy as np
 
 
-DISPSIZE = (1024,768)#(1920,1080)#(1280,1024)#(1024,768)#(1680,1050)#(1280,1024) # canvas size
-SCREENSIZE = (33.8,27.1) #(70,40)#(48.0,38.0)# physical screen size in centimeters
-SCREENDIST = 65.0#225#60.0#57.0 # centimeters; distance between screen and participant's eyes
+DISPSIZE = (1920,1080)#(1024,768)#(1280,1024)#(1024,768)#(1680,1050)#(1280,1024) # canvas size
+SCREENSIZE = (70,40)#(33.8,27.1) #(48.0,38.0)# physical screen size in centimeters
+SCREENDIST = 225#65.0#60.0#57.0 # centimeters; distance between screen and participant's eyes
 
 
 screen_num = -1#0#1

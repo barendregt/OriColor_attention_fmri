@@ -216,7 +216,7 @@ class OriColorSession(EyelinkSession):
 
 		# fixation point
 		self.fixation_rim = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=22.5, pos = np.array((0.0,0.0)), color = (-1,-1,-1), maskParams = {'fringeWidth':0.4})
-		self.fixation_outer_rim = visual.PatchStim(self.screen, mask='circle',tex=None, size=40, pos = np.array((0.0,0.0)), color = (0.0,0.0,0.0), maskParams = {'fringeWidth':0.4})
+		self.fixation_outer_rim = visual.PatchStim(self.screen, mask='circle',tex=None, size=50, pos = np.array((0.0,0.0)), color = (0.0,0.0,0.0), maskParams = {'fringeWidth':0.4})
 		self.fixation = visual.PatchStim(self.screen, mask='raisedCos',tex=None, size=20.0, pos = np.array((0.0,0.0)), color = np.array((0,0,0)), opacity = 1.0, maskParams = {'fringeWidth':0.4})
 		
 		#ecc_mask = filters.makeMask(matrixSize = 2048, shape='raisedCosine', radius=self.standard_parameters['stimulus_size'] * self.screen_pix_size[1] / self.screen_pix_size[0], center=(0.0, 0.0), range=[1, -1], fringeWidth=0.1 )
