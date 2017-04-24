@@ -16,7 +16,7 @@ class OriColorTrial(Trial):
 	def __init__(self, parameters = {}, phase_durations = [], session = None, screen = None, tracker = None):
 		super(OriColorTrial, self).__init__(parameters = parameters, phase_durations = phase_durations, session = session, screen = screen, tracker = tracker)
 		
-		self.stim = OriColorStim(self.screen, self, self.session, trial_params = self.parameters['ori_color'])
+		self.stim = OriColorStim(self.screen, self, self.session, trial_params = self.parameters['stimulus_params'])
 		
 		this_instruction_string = 'Waiting for scanner to start...'# self.parameters['task_instruction']
 		self.instruction = visual.TextStim(self.screen, text = this_instruction_string, font = 'Helvetica Neue', pos = (0, 0), italic = True, height = 30, alignHoriz = 'center')
@@ -32,21 +32,21 @@ class OriColorTrial(Trial):
 	
 	def draw(self):
 		"""docstring for draw"""
-		if self.phase == 0:
+		if (self.phase == 0) or (self.phase == 2):
 			self.session.fixation.color = (self.fix_col_val, self.fix_col_val, self.fix_col_val)
 			self.session.fixation_outer_rim.draw()
-			# self.session.fixation_rim.draw()
+			self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 		
 		elif self.phase == 1:
+			self.phase_time = self.session.clock.getTime()
+			self.stim.draw(phase = self.phase_time - self.phase_time_start)
+
 			self.session.fixation.color = (self.fix_col_val, self.fix_col_val, self.fix_col_val)
 			self.session.fixation_outer_rim.draw()
-			# self.session.fixation_rim.draw()
+			self.session.fixation_rim.draw()
 			self.session.fixation.draw()
 
-			self.phase_time = self.session.clock.getTime()
-
-			self.stim.draw(phase = self.phase_time - self.phase_time_start)
 			
 		super(OriColorTrial, self).draw( )
 		# self.screen.getMovieFrame() # Save frame for movie, outside scanner!		

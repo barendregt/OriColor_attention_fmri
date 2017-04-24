@@ -20,10 +20,7 @@ standard_parameters = {
 	
 	## common parameters:
 	'TR':               	 0.945,		# VERY IMPORTANT TO FILL IN!! (in secs)
-	# 'number_of_quest_trials':  120,		# this needs to divide into 8
-	# 'number_of_trials':       400,		# this needs to divide into 8
-	'ntrials_per_stim':		 24,#100,   # this * 4 will be the total number of trials
-	'mapper_ntrials':		      100,# 168,
+	'mapper_ntrials':		      128,# trials per location
 	'mapper_max_index': 63,
 
 	# For custom eye tracker points
@@ -31,11 +28,13 @@ standard_parameters = {
 	'x_offset':			  0.0,
 	
 	## stimulus parameters:calc
-	'stimulus_size': 2.5,#1.5,	# diameter in dva
+	'stimulus_size': 100,#2.5,#100,#2.5,#1.5,	# diameter in dva
 
-	'stimulus_positions': ([1.5, 1.5], [1.5, -1.5], [-1.5, -1.5], [-1.5, 1.5],[1.5, 1.5],[-1.5, 1.5],[-1.5, -1.5], [1.5, -1.5]),#(0.0, 0.0),
 
-	'stimulus_base_spatfreq': 4,#0.04,#0.02,#0.04,
+	'stimulus_mask': None,#'raisedCos',#None,
+	'stimulus_positions': [[0.0,0.0]],#[[1.5, 1.5], [1.5, -1.5], [-1.5, -1.5], [-1.5, 1.5]],#(0.0, 0.0),
+
+	'stimulus_base_spatfreq': 0.04,#4,#0.04,#0.02,#0.04,
 
 	'stimulus_base_orientation': (0,90),#(45, 135),
 	'stimulus_base_colors': ((55,80,75), (55,-80,75)),
@@ -68,9 +67,12 @@ standard_parameters = {
 	'timing_responseDuration' : 1.5,#2.75, # time to respond	
 	'timing_ITI_duration':  (0.5, 1.5),		# in sec
 
-	'response_buttons_orientation': ['j','l'], #['b','y'],
-	'response_buttons_color': ['s','f'],#['w','e'],
+	'response_buttons_orientation': ['b','y'],#['j','l'], #
+	'response_buttons_color': ['w','e'],#['s','f'],#
 
+	# mapper location order (from above):
+	# (T=top,B=bottom,L=left,R=right)
+	# TR-BR-BL-TL
 
 	# OriColorMapper stuff
 	'stimulus_ori_min':			90.0,		# minimal orientation to show (in deg)
@@ -82,13 +84,13 @@ standard_parameters = {
 	'stimulus_col_rad':			  75,		# radius of color circle
 	'stimulus_col_baselum':		  55,	    # L
 
-	'mapper_pre_post_trials':		 0,#5,
-	'mapper_stimulus_duration':      1.0,		# in TR
+	'mapper_pre_post_trials':		 5,
+	'mapper_stimulus_duration':      0.65,		# in TR
 	'mapper_task_duration':			 0.5,    # in TR
 	'mapper_response_duration':		 1.0,	 # in TR
 	'mapper_task_timing':			(2.0, 8.0), # min and max separation of fix task
-	'mapper_ITI_duration':           2.0,		# in TR
-	'mapper_n_redraws':		 	 	 10.0,		# refresh random phase this many times during presentation	
+	'mapper_ITI_duration':           0.2,		# in TR
+	'mapper_n_redraws':		 	 	 5.0,		# refresh random phase this many times during presentation	
 	'mapper_mapper_redraws':		20.0	
 
 }
