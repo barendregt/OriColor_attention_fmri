@@ -301,7 +301,7 @@ class OriColorSession(EyelinkSession):
 
 		parsopf = open(self.output_file + '_trialinfo.pickle', 'wb')
 
-		output = [self.trial_array, self.trial_indices, self.staircase]
+		output = [self.trial_array, self.trial_indices, self.trial_params, self.per_trial_parameters, self.per_trial_phase_durations, self.staircase]
 
 		pickle.dump(output,parsopf)
 

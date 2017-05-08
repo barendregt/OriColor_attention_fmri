@@ -195,8 +195,12 @@ class OriColorTrial(Trial):
 				break
 
 			if self.session.time_for_next_task():
-				self.fix_col_val = self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
-				self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.01]), 0.99]) 
+				if session.run_type==0:
+					self.fix_col_val = self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
+					#self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.01]), 0.99]) 
+				else:
+					self.fix_col_val = (2*np.random.rand().round()-1) * np.random.rand()
+				self.session.last_task_val = np.abs(self.fix_col_val)
 			else:
 				self.fix_col_val = 0.0
 
