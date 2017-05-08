@@ -25,7 +25,7 @@ from Staircase import ThreeUpOneDownStaircase
 # appnope.nope()
 
 class OriColorSession(EyelinkSession):
-	def __init__(self, subject_initials, index_number,scanner, tracker_on):
+	def __init__(self, subject_initials, index_number,scanner, tracker_on, run_type):
 		super(OriColorSession, self).__init__( subject_initials, index_number)
 
 		self.create_screen( size = DISPSIZE, full_screen = screen_full, physical_screen_distance = SCREENDIST, background_color = background_color, physical_screen_size = SCREENSIZE, screen_nr = screen_num )
@@ -121,6 +121,9 @@ class OriColorSession(EyelinkSession):
 		else:
 			self.create_tracker(tracker_on = False)
 		
+
+		self.run_type = run_type
+
 		self.response_button_signs = response_buttons
 		self.response_buttons = response_buttons
 
@@ -169,13 +172,23 @@ class OriColorSession(EyelinkSession):
 
 		# emptytrials = self.standard_parameters['mapper_ntrials'] - len(self.trial_array)
 
-		self.trial_indices = np.hstack([np.random.permutation(self.standard_parameters['mapper_ntrials']) for i in range(len(self.standard_parameters['stimulus_positions']))])[:,np.newaxis]
+		self.trial_indices = np.hstack([np.random.permutation(self.standard_parameters['mapper_ntrials']) for i in range(len(self.standard_parameters['stimulus_positions'][self.run_type]))])[:,np.newaxis]#np.random.permutation(self.standard_parameters['mapper_ntrials'])#
 
-		self.trial_params = np.hstack([self.trial_indices, np.vstack([np.reshape(item*self.standard_parameters['mapper_ntrials'],(self.standard_parameters['mapper_ntrials'],2)) for item in self.standard_parameters['stimulus_positions']])])
+
+		self.trial_params = np.hstack([self.trial_indices, np.vstack([np.reshape(item*self.standard_parameters['mapper_ntrials'],(self.standard_parameters['mapper_ntrials'],2)) for item in self.standard_parameters['stimulus_positions'][self.run_type]])])
+
+		self.trial_params = self.trial_params[np.random.permutation(self.trial_params.shape[0]),:]
+
+		if self.run_type==1:
+			tmp = self.trial_params
+			self.trial_params = np.hstack([100*np.ones((self.trial_params.shape[0]*2,1)), np.zeros((self.trial_params.shape[0]*2,1)), np.zeros((self.trial_params.shape[0]*2,1))])
+			self.trial_params[0::2] = tmp
+
+		
 
 		# Add empty trials
 		for i in range(self.standard_parameters['mapper_pre_post_trials']):
-			self.trial_params = np.vstack([[100,0,0], self.trial_params[np.random.permutation(self.trial_params.shape[0]),:], [100,0,0]])
+			self.trial_params = np.vstack([[100,0,0], self.trial_params, [100,0,0]])
 
 
 		self.phase_durations = np.array([0, # present stimulus
@@ -347,8 +360,9 @@ class OriColorSession(EyelinkSession):
 			if self.stopped == True:
 				break
 
-			#event.waitKeys(keyList = ['t'])
+			
 			while self.clock.getTime()-trial_start_time < self.standard_parameters['TR']:
+				# event.waitKeys(keyList = ['t'])
 				time.sleep(0.00001)
 		
 		print self.clock.getTime() - start_time

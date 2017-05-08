@@ -9,6 +9,7 @@ from OriColorSession import *
 def main():
 	initials = raw_input('Your initials: ')
 	run_nr = int(raw_input('Run number: '))
+	run_type = int(raw_input('Run type (0=location, 1=full):'))
 	scanner = raw_input('Are you in the scanner (y/n)?: ')
 	track_eyes = raw_input('Are you recording gaze (y/n)?: ')
 	if track_eyes == 'y':
@@ -18,7 +19,7 @@ def main():
 
 	# appnope.nope()
 
-	ts = OriColorSession( initials, run_nr, scanner, tracker_on )
+	ts = OriColorSession( initials, run_nr, scanner, tracker_on, run_type )
 	ts.run()
 
 	# plot_staircases(initials, run_nr)

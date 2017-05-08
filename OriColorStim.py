@@ -18,7 +18,7 @@ class OriColorStim(object):
 		self.trial = trial
 		self.session = session
 		self.screen = screen
-		self.size_pix = session.standard_parameters['stimulus_size'] * session.pixels_per_degree
+		self.size_pix = session.standard_parameters['stimulus_size'][session.run_type] * session.pixels_per_degree
 		
 		# self.orientation = orientation	# convert to radians immediately, and use to calculate rotation matrix
 
@@ -63,7 +63,7 @@ class OriColorStim(object):
 			# try:
 				#self.element_array = visual.ElementArrayStim(screen, elementTex = 'sqr', elementMask = 'raisedCos', maskParams = {'fringeWidth': 0.6}, nElements = 1, sizes = session.standard_parameters['stimulus_size'] * session.pixels_per_degree, sfs = session.standard_parameters['stimulus_base_spatfreq'], xys = self.trial_params[4:][np.newaxis,:] * session.pixels_per_degree, oris = self.trial_params[0], colors = self.trial_params[1:4], colorSpace = 'rgb', units='pix') 
 				#self.element_array = visual.GratingStim(screen, tex = 'sqr', mask = None, size = np.array([[2560, 2560]]), sf = session.standard_parameters['stimulus_base_spatfreq'], pos = np.array([[0,0]]) * session.pixels_per_degree, ori = self.trial_params[0], color = self.trial_params[1:4], colorSpace = 'rgb', units='pix') 
-			self.element_array = visual.GratingStim(screen, tex = 'sqr', mask = session.standard_parameters['stimulus_mask'], maskParams = {'fringeWidth': 0.6}, size = session.standard_parameters['stimulus_size'] * session.pixels_per_degree, sf = session.standard_parameters['stimulus_base_spatfreq'], pos = self.trial_params[4:][np.newaxis,:] * session.pixels_per_degree, ori = self.trial_params[0], color = self.trial_params[1:4], colorSpace = 'rgb', units='pix') 
+			self.element_array = visual.GratingStim(screen, tex = 'sqr', mask = session.standard_parameters['stimulus_mask'][session.run_type], maskParams = {'fringeWidth': 0.6}, size = session.standard_parameters['stimulus_size'][session.run_type] * session.pixels_per_degree, sf = session.standard_parameters['stimulus_base_spatfreq'][session.run_type], pos = self.trial_params[4:][np.newaxis,:] * session.pixels_per_degree, ori = self.trial_params[0], color = self.trial_params[1:4], colorSpace = 'rgb', units='pix') 
 				# dbstop()
 
 	

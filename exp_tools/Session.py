@@ -173,7 +173,7 @@ class Session(object):
 	
 	def close(self):
 		"""close screen and save data"""
-		pygame.mixer.quit()
+		# pygame.mixer.quit()
 		self.screen.close()
 		parsopf = open(self.output_file + '_outputDict.pickle', 'ab')
 		pickle.dump(self.outputDict,parsopf)

@@ -3,10 +3,10 @@ import numpy as np
 
 DISPSIZE = (1920,1080)#(1024,768)#(1280,1024)#(1024,768)#(1680,1050)#(1280,1024) # canvas size
 SCREENSIZE = (70,40)#(33.8,27.1) #(48.0,38.0)# physical screen size in centimeters
-SCREENDIST = 225#65.0#60.0#57.0 # centimeters; distance between screen and participant's eyes
+SCREENDIST = 112.5#225#65.0#60.0#57.0 # centimeters; distance between screen and participant's eyes
 
 
-screen_num = -1#0#1
+screen_num = -1#-1#0#1
 #screen_res = (2560,1440)#(1920,1080)#(2560,1440)#(3840,2160)#(1024,768)#(1920,1080)#(1280,1024)#(1680,1050)#(3840,2160)#(1920,1080)#(
 #screen_dist = 60#112.5#60#225#60#225#60.0 # 159.0
 #screen_size = (33,22)#(69.84,39.29)#(48, 38) # (70, 40)
@@ -28,13 +28,13 @@ standard_parameters = {
 	'x_offset':			  0.0,
 	
 	## stimulus parameters:calc
-	'stimulus_size': 100,#2.5,#100,#2.5,#1.5,	# diameter in dva
+	'stimulus_size': [2.5, 100],#2.5,#100,#2.5,#1.5,	# diameter in dva
 
 
-	'stimulus_mask': None,#'raisedCos',#None,
-	'stimulus_positions': [[0.0,0.0]],#[[1.5, 1.5], [1.5, -1.5], [-1.5, -1.5], [-1.5, 1.5]],#(0.0, 0.0),
+	'stimulus_mask': ['raisedCos',None],#'raisedCos',#None,
+	'stimulus_positions': [[[1.5, 1.5], [1.5, -1.5], [-1.5, -1.5], [-1.5, 1.5]], [[0.0,0.0]]],#(0.0, 0.0),
 
-	'stimulus_base_spatfreq': 0.04,#4,#0.04,#0.02,#0.04,
+	'stimulus_base_spatfreq': [0.03,0.06],#4,#0.04,#0.02,#0.04,
 
 	'stimulus_base_orientation': (0,90),#(45, 135),
 	'stimulus_base_colors': ((55,80,75), (55,-80,75)),
@@ -84,7 +84,7 @@ standard_parameters = {
 	'stimulus_col_rad':			  75,		# radius of color circle
 	'stimulus_col_baselum':		  55,	    # L
 
-	'mapper_pre_post_trials':		 5,
+	'mapper_pre_post_trials':		 15,
 	'mapper_stimulus_duration':      0.65,		# in TR
 	'mapper_task_duration':			 0.5,    # in TR
 	'mapper_response_duration':		 1.0,	 # in TR
