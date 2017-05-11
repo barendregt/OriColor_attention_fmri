@@ -279,7 +279,11 @@ class OriColorSession(EyelinkSession):
 			self.task_direction = 2*round(np.random.random()) - 1
 			self.task_responded = False
 
-			print 'Running task from %f to %f' % (current_time, self.next_task_time)
+			log_msg = 'Running task from %f to %f' % (current_time, self.next_task_time)
+
+			print log_msg
+
+			self.events.append(log_msg)
 		elif self.pulse_task and (current_time > self.task_timing[1]):
 			self.pulse_task = False 
 
