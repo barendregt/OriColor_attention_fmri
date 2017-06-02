@@ -32,7 +32,7 @@ standard_parameters = {
 
 
 	'stimulus_mask': ['raisedCos',None],#'raisedCos',#None,
-	'stimulus_positions': [[[1.5, 1.5], [1.5, -1.5], [-1.5, -1.5], [-1.5, 1.5]], [[0.0,0.0]]],#(0.0, 0.0),
+	'stimulus_positions': [[[1.5, 1.5], [1.5, -1.5], [-1.5, -1.5], [-1.5, 1.5]], [[0.0,0.0],[0.0,0.0]]],#(0.0, 0.0),
 
 	'stimulus_base_spatfreq': [0.03,0.06],#4,#0.04,#0.02,#0.04,
 

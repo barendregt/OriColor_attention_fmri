@@ -106,7 +106,7 @@ class OriColorTrial(Trial):
 						# 	# now block the possibility of further updates
 						# 	self.stim.last_sampled_staircase = None
 
-						# 	if self.session.tasks[self.parameters['task_index']] != 'Fix_no_stim':
+						# 	if self.session.tasks[self.parameters['task_index']] != 'Fix_no_stim':tt
 						# 		log_msg = 'staircase %s bin %d updated from %f after response %s at %f'%( self.session.tasks[self.parameters['task_index']], self.stim.eccentricity_bin,test_value, str((response+1)/2), self.session.clock.getTime() )
 						# 	else:
 					log_msg = 'staircase updated from %f to %f after response %s [key %s, dir %d] at %f'%( self.session.task_direction*self.session.last_task_val, self.session.task_direction*self.session.staircase.get_intensity(), str(response), ev,self.session.response_buttons[ev], self.session.clock.getTime() )
@@ -178,7 +178,7 @@ class OriColorTrial(Trial):
 		self.parameterDict.update({'trial_start': self.start_time})
 
 		#print self.start_time
-
+		task_msg_printed = False
 		while not self.stopped:
 			self.run_time = self.session.clock.getTime() - self.start_time
 
@@ -195,11 +195,16 @@ class OriColorTrial(Trial):
 				break
 
 			if self.session.time_for_next_task():
-				if session.run_type==0:
-					self.fix_col_val = self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
+				if ~task_msg_printed:
+					log_msg = 'Running task at %f' % (self.session.clock.getTime())
+					self.events.append( log_msg )
+					task_msg_printed = True
+
+				if self.session.run_type==0:
+					self.fix_col_val = self.session.task_direction * 0.5#self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
 					#self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.01]), 0.99]) 
 				else:
-					self.fix_col_val = (2*np.random.rand().round()-1) * np.random.rand()
+					self.fix_col_val = self.session.task_direction * 0.5#np.random.rand()
 				self.session.last_task_val = np.abs(self.fix_col_val)
 			else:
 				self.fix_col_val = 0.0

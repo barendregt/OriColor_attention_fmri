@@ -148,6 +148,9 @@ class OriColorSession(EyelinkSession):
 
 		self.standard_parameters = standard_parameters
 
+		# if self.run_type==1:	
+		# 	self.standard_parameters['mapper_ntrials'] *= 2
+
 
 		self.orientations = np.linspace(self.standard_parameters['stimulus_ori_min'], self.standard_parameters['stimulus_ori_max'], self.standard_parameters['stimulus_ori_steps']+1)[:-1]
 
@@ -340,7 +343,7 @@ class OriColorSession(EyelinkSession):
 		# self.screen.close()
 
 		# dbstop()
-
+		print len(self.trial_params)
 
 		start_time = self.clock.getTime()
 
