@@ -200,11 +200,18 @@ class OriColorTrial(Trial):
 					self.events.append( log_msg )
 					task_msg_printed = True
 
-				if self.session.run_type==0:
-					self.fix_col_val = self.session.task_direction * 0.5#self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
-					#self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.01]), 0.99]) 
-				else:
-					self.fix_col_val = self.session.task_direction * 0.5#np.random.rand()
+# 				if self.session.run_type==0:
+# 					self.fix_col_val = self.session.task_direction * 0.5#self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
+# 					#self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.01]), 0.99]) 
+# 				else:
+# 					self.fix_col_val = self.session.task_direction * 0.5#np.random.rand()
+# 
+# 				# if self.session.run_type==1:
+# 				# 	self.fix_col_val = self.session.task_direction * min([max([self.session.staircase.get_intensity(), 0.01]), 0.99])
+# 				# 	#self.session.last_task_val = min([max([self.session.staircase.get_intensity(), 0.01]), 0.99]) 
+# 				# else:
+				self.fix_col_val = self.session.task_direction * 0.5#2*round(np.random.rand())-1) * np.random.rand()
+
 				self.session.last_task_val = np.abs(self.fix_col_val)
 			else:
 				self.fix_col_val = 0.0
